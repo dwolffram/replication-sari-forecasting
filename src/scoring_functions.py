@@ -80,7 +80,7 @@ def compute_coverage(df):
 
 
 def compute_ae(df):
-    df_ae = df[df['type'] == 'median'].copy()
+    df_ae = df[df['quantile'] == 0.5].copy()
     df_ae['ae'] = abs(df_ae.value - df_ae.truth)
     return df_ae.groupby('model').agg({'ae': 'mean'}).reset_index()
 

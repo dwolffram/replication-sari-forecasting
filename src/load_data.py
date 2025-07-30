@@ -282,10 +282,9 @@ def add_truth(df, source='icosari', disease='sari', target=False):
     return df
 
 
-def load_predictions(models=None, period='post-covid', start='2023-11-16', end='2024-09-12', exclude_christmas=True,
+def load_predictions(models=None, start='2023-11-16', end='2024-09-12', exclude_christmas=True,
                      include_median=True, include_truth=True, target=True):
-    files = glob.glob(f'../data/{period}/submissions/**/*.csv', recursive=True)
-    files = [f for f in files if '/old/' not in f]
+    files = glob.glob('../data/forecasts/**/*.csv', recursive=True)
     
     dfs = []
     for file in files:
