@@ -285,7 +285,7 @@ def add_truth(df, source='icosari', disease='sari', target=False):
 
 def load_predictions(models=None, start='2023-11-16', end='2024-09-12', exclude_christmas=True,
                      include_median=True, include_truth=True, target=True):
-    path_forecasts = Path.cwd().parent / "data" / "forecasts"
+    path_forecasts = Path.cwd().parent / "forecasts"
     files = list(path_forecasts.rglob("*.csv"))
     
     df = pd.concat(
@@ -309,7 +309,7 @@ def load_predictions(models=None, start='2023-11-16', end='2024-09-12', exclude_
     return df[df.forecast_date.between(start, end)].reset_index(drop=True)
 
 def load_nowcasts(start='2023-11-16', end='2024-09-12', include_truth=True, exclude_christmas=True, quantiles=None):
-    path_nowcasts = Path.cwd().parent / "data" / "nowcasts" / "KIT-simple_nowcast"
+    path_nowcasts = Path.cwd().parent / "nowcasts" / "KIT-simple_nowcast"
     files = list(path_nowcasts.rglob("*.csv"))
 
     df = pd.concat(
