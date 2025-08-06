@@ -1,5 +1,6 @@
 from src.load_data import *
 import wandb
+import warnings
 
 def get_cv_chunks(ts):
     '''
@@ -186,25 +187,32 @@ def compute_validation_score(model, targets_train, targets_validation, covariate
         validation_start = targets_train[0].end_time() + targets_train[0].freq
     else:
         validation_start = targets_train.end_time() + targets_train.freq
-
-    scores = model.backtest(
-        series=targets_validation,
-        past_covariates=covariates,
-        start=validation_start,
-        forecast_horizon=horizon,
-        stride=1,
-        last_points_only=False,
-        retrain=False,
-        verbose=False,
-        num_samples=num_samples,
-        metric=metric, 
-        metric_kwargs=metric_kwargs,
-        enable_optimization=True
-    )
+    
+    with warnings.catch_warnings():
+        warnings.filterwarnings(
+            "ignore",
+            message="X does not have valid feature names, but LGBMRegressor was fitted with feature names",
+            category=UserWarning,
+            module="sklearn.utils.validation",
+        )
+        scores = model.backtest(
+            series=targets_validation,
+            past_covariates=covariates,
+            start=validation_start,
+            forecast_horizon=horizon,
+            stride=1,
+            last_points_only=False,
+            retrain=False,
+            verbose=False,
+            num_samples=num_samples,
+            metric=metric, 
+            metric_kwargs=metric_kwargs,
+            enable_optimization=enable_optimization
+        )
 
     score = np.mean(scores)
     
-    return score if score != np.nan else float("inf")
+    return score if not np.isnan(score) else float("inf")
 
 
 def get_best_parameters(project, model, target_metric="WIS", test_year=None, use_covariates=None, multiple_series=None, lags=None, sample_weight=None, sweep=None):

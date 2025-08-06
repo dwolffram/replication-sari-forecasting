@@ -1,9 +1,10 @@
 import pandas as pd
 from darts import TimeSeries, concatenate
 from src.load_data import extract_info
+from config import ROOT
 
 RT_PATH = {
-    'sari': 'https://raw.githubusercontent.com/KITmetricslab/RESPINOW-Hub/main/data/icosari/sari/reporting_triangle-icosari-sari.csv',
+    'sari': ROOT / 'data/reporting_triangle-icosari-sari.csv',
     'influenza': 'https://raw.githubusercontent.com/KITmetricslab/RESPINOW-Hub/main/data/survstat/influenza/reporting_triangle-survstat-influenza.csv'
 }
 

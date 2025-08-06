@@ -4,13 +4,11 @@ import pandas as pd
 import numpy as np
 from darts import TimeSeries, concatenate
 from darts.utils.ts_utils import retain_period_common_to_all
-# import matplotlib.pyplot as plt
-
 
 def load_latest_series(indicator='sari'):
     source = SOURCE_DICT[indicator]
     
-    ts = pd.read_csv(f'https://raw.githubusercontent.com/KITmetricslab/RESPINOW-Hub/refs/heads/main/data/{source}/{indicator}/latest_data-{source}-{indicator}.csv')
+    ts = pd.read_csv(ROOT / f'data/latest_data-{source}-{indicator}.csv')
         
     ts = ts[ts.location == 'DE']
         
@@ -28,7 +26,7 @@ def load_target_series(indicator='sari', as_of=None, age_group=None):
     source = SOURCE_DICT[indicator]
     
     if as_of is None:
-        target = pd.read_csv(f'https://raw.githubusercontent.com/KITmetricslab/RESPINOW-Hub/main/data/{source}/{indicator}/target-{source}-{indicator}.csv')
+        target = pd.read_csv(ROOT / f'data/target-{source}-{indicator}.csv')
     else:
         rt = load_rt(indicator)
         target = target_as_of(rt, as_of)
@@ -54,7 +52,7 @@ def load_nowcast(forecast_date, probabilistic=True, indicator='sari', local=True
     source = SOURCE_DICT[indicator]
     
     if local:
-        filepath = f'{f"../data/nowcasts/KIT-{model}" if indicator == "sari" else "../ari/nowcasts"}/{forecast_date}-{source}-{indicator}-KIT-{model}.csv'
+        filepath = f'{f"../../data/nowcasts/KIT-{model}" if indicator == "sari" else "../ari/nowcasts"}/{forecast_date}-{source}-{indicator}-KIT-{model}.csv'
     else:
         filepath = f'https://raw.githubusercontent.com/KITmetricslab/RESPINOW-Hub/refs/heads/main/submissions/{source}/{indicator}/KIT-{model}/{forecast_date}-{source}-{indicator}-KIT-{model}.csv'
     df = pd.read_csv(filepath)
@@ -101,7 +99,7 @@ def make_target_paths(target_series, nowcast):
 
 def load_rt(indicator='sari', preprocessed=False):
     source = SOURCE_DICT[indicator]
-    rt = pd.read_csv(f'https://raw.githubusercontent.com/KITmetricslab/RESPINOW-Hub/refs/heads/main/data/{source}/{indicator}/reporting_triangle-{source}-{indicator}{"-preprocessed" if preprocessed else ""}.csv',
+    rt = pd.read_csv(ROOT / f'data/reporting_triangle-{source}-{indicator}{"-preprocessed" if preprocessed else ""}.csv',
                  parse_dates=['date'])
 
     return rt.loc[:, : 'value_4w']

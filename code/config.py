@@ -3,6 +3,9 @@ from epiweeks import Week
 from darts.metrics.metrics import mql
 from darts.utils.likelihood_models import NegativeBinomialLikelihood
 from pytorch_lightning.callbacks import RichProgressBar
+from pathlib import Path
+
+ROOT = Path.cwd().parent
 
 MODEL_NAMES = {
     'KIT-MeanEnsemble' : 'Ensemble',

@@ -65,7 +65,7 @@ def resize_timeseries(ts, start_date, end_date):
     return ts
 
 
-URL = 'https://raw.githubusercontent.com/KITmetricslab/RESPINOW-Hub/main/'
+# URL = 'https://raw.githubusercontent.com/KITmetricslab/RESPINOW-Hub/main/'
 
 TARGETS_DICT = {
     'survstat' : ['influenza'], #, 'rsv'],
@@ -81,51 +81,51 @@ LOCATION_FILTERS = {
 }
 
 
-def load_data(sources=TARGETS_DICT.keys(), 
-              start_date=pd.to_datetime('2014-10-05'), 
-              end_date=pd.to_datetime('2024-09-01')):
+# def load_data(sources=TARGETS_DICT.keys(), 
+#               start_date=pd.to_datetime('2014-10-05'), 
+#               end_date=pd.to_datetime('2024-09-01')):
     
-    targets_dict = {key: TARGETS_DICT[key] for key in sources} # only use a subset of the available sources
-    ts = []
-    for source in targets_dict.keys():
-        # print(source)
-        for target in targets_dict[source]:
-            # print('-', target)
-            df = pd.read_csv(URL + f'data/{source}/{target.split("-")[0]}/latest_data-{source}-{target}.csv', parse_dates=['date'])
-            if f'{source}-{target}' in LOCATION_FILTERS.keys():
-                df = df[df.location.isin(LOCATION_FILTERS[f'{source}-{target}'])]
-            df['source'] = source
-            df['target'] = target
-            ts_temp = TimeSeries.from_group_dataframe(df, group_cols=['source', 'target', 'location', 'age_group'], 
-                                             time_col='date', value_cols='value', 
-                                             freq='7D', fillna_value=0)
-            ts_temp = concatenate(ts_temp, axis=1)
-            ts_temp = resize_timeseries(ts_temp, start_date, end_date)
-            ts_temp = rename_components(ts_temp)
-            ts.append(ts_temp)
+#     targets_dict = {key: TARGETS_DICT[key] for key in sources} # only use a subset of the available sources
+#     ts = []
+#     for source in targets_dict.keys():
+#         # print(source)
+#         for target in targets_dict[source]:
+#             # print('-', target)
+#             df = pd.read_csv(URL + f'data/{source}/{target.split("-")[0]}/latest_data-{source}-{target}.csv', parse_dates=['date'])
+#             if f'{source}-{target}' in LOCATION_FILTERS.keys():
+#                 df = df[df.location.isin(LOCATION_FILTERS[f'{source}-{target}'])]
+#             df['source'] = source
+#             df['target'] = target
+#             ts_temp = TimeSeries.from_group_dataframe(df, group_cols=['source', 'target', 'location', 'age_group'], 
+#                                              time_col='date', value_cols='value', 
+#                                              freq='7D', fillna_value=0)
+#             ts_temp = concatenate(ts_temp, axis=1)
+#             ts_temp = resize_timeseries(ts_temp, start_date, end_date)
+#             ts_temp = rename_components(ts_temp)
+#             ts.append(ts_temp)
     
-    ts = concatenate(ts, axis=1)
+#     ts = concatenate(ts, axis=1)
 
-    return ts
+#     return ts
 
 
-def load_stringency(start, end, fill_missing=None):
-    df = pd.read_csv('https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/timeseries/stringency_index_avg.csv')
-    df = df[df.country_name == 'Germany'].iloc[:, 6:].T
-    df.columns = ['SI']
-    df.index = pd.to_datetime(df.index)
-    df = df.resample('W-SUN').mean()
+# def load_stringency(start, end, fill_missing=None):
+#     df = pd.read_csv('https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/timeseries/stringency_index_avg.csv')
+#     df = df[df.country_name == 'Germany'].iloc[:, 6:].T
+#     df.columns = ['SI']
+#     df.index = pd.to_datetime(df.index)
+#     df = df.resample('W-SUN').mean()
     
-    si = TimeSeries.from_dataframe(df)
+#     si = TimeSeries.from_dataframe(df)
     
-    if start < si.start_time():
-        si = prepend_nan(si, start)
-    if end > si.end_time():
-        si = append_nan(si, end)
-    if fill_missing is not None:
-        si = fill_missing_values(si, fill_missing)
+#     if start < si.start_time():
+#         si = prepend_nan(si, start)
+#     if end > si.end_time():
+#         si = append_nan(si, end)
+#     if fill_missing is not None:
+#         si = fill_missing_values(si, fill_missing)
         
-    return si
+#     return si
 
 
 def train_validation_test_split(ts, train_end, validation_end, test_end):
@@ -271,9 +271,9 @@ def add_median(df):
 
 def add_truth(df, source='icosari', disease='sari', target=False):
     if target:
-        df_truth = pd.read_csv(f'https://raw.githubusercontent.com/KITmetricslab/RESPINOW-Hub/main/data/{source}/{disease}/target-{source}-{disease}.csv')
+        df_truth = pd.read_csv(ROOT / f'data/target-{source}-{disease}.csv')
     else:
-        df_truth = pd.read_csv(f'https://raw.githubusercontent.com/KITmetricslab/RESPINOW-Hub/main/data/{source}/{disease}/latest_data-{source}-{disease}.csv')
+        df_truth = pd.read_csv(ROOT / f'data/latest_data-{source}-{disease}.csv')
         
     df_truth = df_truth.rename(columns={'value': 'truth'})
 
@@ -340,36 +340,36 @@ def encode_static_covariates(ts, ordinal=False):
     return ts
 
 
-def load_data_split(train_end, validation_end, test_end,
-                    ordinal_encoding=False, multiple_series=False, targets_as_covariates=False):
+# def load_data_split(train_end, validation_end, test_end,
+#                     ordinal_encoding=False, multiple_series=False, targets_as_covariates=False):
     
-    ts = load_data(SOURCES)
-    ts = encode_static_covariates(ts, ordinal=ordinal_encoding)
-    targets, covariates = target_covariate_split(ts, TARGETS)
+#     ts = load_data(SOURCES)
+#     ts = encode_static_covariates(ts, ordinal=ordinal_encoding)
+#     targets, covariates = target_covariate_split(ts, TARGETS)
     
-    if multiple_series:
-        # to train on multiple series instead of a multivariate series
-        targets = [targets[col] for col in targets.columns]
+#     if multiple_series:
+#         # to train on multiple series instead of a multivariate series
+#         targets = [targets[col] for col in targets.columns]
 
-        targets_train      = [target[ : train_end] for target in targets]
-        targets_validation = [target[ : validation_end] for target in targets]
-        targets_test       = [target[ : test_end] for target in targets]
-        targets_eval       = [target[EVAL_START : ] for target in targets]
+#         targets_train      = [target[ : train_end] for target in targets]
+#         targets_validation = [target[ : validation_end] for target in targets]
+#         targets_test       = [target[ : test_end] for target in targets]
+#         targets_eval       = [target[EVAL_START : ] for target in targets]
 
-        if targets_as_covariates:
-            covariates = [ts]*len(TARGETS)
-        else:
-            covariates = [covariates]*len(TARGETS)
-    else:
-        targets_train      = targets[ : train_end]
-        targets_validation = targets[ : validation_end]
-        targets_test       = targets[ : test_end]
-        targets_eval       = targets[EVAL_START : ]
+#         if targets_as_covariates:
+#             covariates = [ts]*len(TARGETS)
+#         else:
+#             covariates = [covariates]*len(TARGETS)
+#     else:
+#         targets_train      = targets[ : train_end]
+#         targets_validation = targets[ : validation_end]
+#         targets_test       = targets[ : test_end]
+#         targets_eval       = targets[EVAL_START : ]
         
-        if targets_as_covariates:
-            covariates = ts
+#         if targets_as_covariates:
+#             covariates = ts
         
-    return ts, targets, targets_train, targets_validation, targets_test, targets_eval, covariates
+#     return ts, targets, targets_train, targets_validation, targets_test, targets_eval, covariates
 
 
 def compute_historical_forecasts(model, series, covariates, start, horizon, num_samples, retrain=False):
