@@ -21,7 +21,7 @@ def reshape_truth(y):
     indicator = y.components[0].split('-')[1]
     
     y = y.to_dataframe()
-    y = y.reset_index().melt(id_vars='date')
+    y = y.reset_index().melt(id_vars='date', var_name='component')
 
     # y['strata']   = y.component.apply(lambda x: x.split('-', 2)[-1].split('_')[0])
     y['strata']   = y.component.apply(lambda x: x.replace(f'{source}-{indicator}-', '').split('_')[0])
