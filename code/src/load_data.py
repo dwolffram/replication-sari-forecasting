@@ -2,6 +2,7 @@ import os
 import glob
 import pandas as pd
 import numpy as np
+from pathlib import Path
 from darts import TimeSeries, concatenate
 from darts.utils.ts_utils import retain_period_common_to_all
 from darts.utils.missing_values import fill_missing_values
@@ -284,14 +285,13 @@ def add_truth(df, source='icosari', disease='sari', target=False):
 
 def load_predictions(models=None, start='2023-11-16', end='2024-09-12', exclude_christmas=True,
                      include_median=True, include_truth=True, target=True):
-    files = glob.glob('../data/forecasts/**/*.csv', recursive=True)
+    path_forecasts = Path.cwd().parent / "data" / "forecasts"
+    files = list(path_forecasts.rglob("*.csv"))
     
-    dfs = []
-    for file in files:
-        df_temp = pd.read_csv(file)
-        df_temp['model'] = file.split('/')[-1].split('-', 5)[-1][:-4] 
-        dfs.append(df_temp)
-    df = pd.concat(dfs)
+    df = pd.concat(
+        (pd.read_csv(f).assign(model=f.stem.split("-", 5)[-1]) for f in files),
+        ignore_index=True,
+    )
     
     if include_median:
         df = add_median(df)
@@ -309,14 +309,13 @@ def load_predictions(models=None, start='2023-11-16', end='2024-09-12', exclude_
     return df[df.forecast_date.between(start, end)].reset_index(drop=True)
 
 def load_nowcasts(start='2023-11-16', end='2024-09-12', include_truth=True, exclude_christmas=True, quantiles=None):
-    files = glob.glob(f'../data/nowcasts/KIT-simple_nowcast/*.csv') 
+    path_nowcasts = Path.cwd().parent / "data" / "nowcasts" / "KIT-simple_nowcast"
+    files = list(path_nowcasts.rglob("*.csv"))
 
-    dfs = []
-    for file in files:
-        df_temp = pd.read_csv(file)
-        df_temp['model'] = 'Nowcast' # file[:-4].split('/')[-1].split('-', 5)[-1]
-        dfs.append(df_temp)
-    df = pd.concat(dfs)
+    df = pd.concat(
+        (pd.read_csv(f).assign(model="Nowcast") for f in files),
+        ignore_index=True,
+    )    
     
     if exclude_christmas:
         df = df[df.forecast_date != '2023-12-28']    

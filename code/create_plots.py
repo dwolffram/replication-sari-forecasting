@@ -1,13 +1,7 @@
 import os
-import warnings
 import papermill as pm
 
-warnings.filterwarnings(
-    "ignore",
-    message="the file is not specified with any extension : null",
-    category=UserWarning,
-    module="papermill.iorw" 
-)
+os.environ["MPLBACKEND"] = "Agg"
 
 notebooks_to_run = [
     "plot_sari.ipynb",
@@ -21,16 +15,15 @@ notebooks_to_run = [
     "diebold_mariano.ipynb"    
 ]
 
-# Determine the null device based on the operating system
-null_device = "NUL" if os.name == "nt" else "/dev/null"
-
 for notebook_path in notebooks_to_run:
     print(f"Executing {notebook_path}...")
     try:
         pm.execute_notebook(
-            notebook_path,
-            null_device, # direct output to the null device
-            report_mode=True
+            "code/" + notebook_path,
+            None,
+            report_mode=True,
+            cwd="code/",
+            kernel_name="replication-sari"
         )
         print(f"Successfully executed {notebook_path}")
     except Exception as e:
