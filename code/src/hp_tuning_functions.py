@@ -1,6 +1,8 @@
 from src.load_data import *
 import wandb
 import warnings
+from darts.models import TSMixerModel
+import torch
 
 def get_cv_chunks(ts):
     '''
@@ -181,7 +183,21 @@ def get_test_data(test_year, sources=SOURCES):
 def compute_validation_score(model, targets_train, targets_validation, covariates, 
                              horizon, num_samples, metric, metric_kwargs, enable_optimization=True, sample_weight=None):
     
-    model.fit(targets_train, past_covariates=covariates, sample_weight=sample_weight)
+     # torch model: add dataloader_kwargs
+    if isinstance(model, TSMixerModel):
+        model.fit(
+            targets_train,
+            past_covariates=covariates,
+            sample_weight=sample_weight,
+            dataloader_kwargs={"pin_memory": torch.cuda.is_available()}
+        )
+        
+    else:
+        model.fit(
+            targets_train,
+            past_covariates=covariates,
+            sample_weight=sample_weight
+        )
     
     if isinstance(targets_train, list):
         validation_start = targets_train[0].end_time() + targets_train[0].freq
