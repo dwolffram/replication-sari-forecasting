@@ -1,0 +1,8 @@
+target-version = "py312"
+line-length = 100
+
+[lint]
+select = ["I"]
+
+[lint.isort]
+known-first-party = ["config", "src"]

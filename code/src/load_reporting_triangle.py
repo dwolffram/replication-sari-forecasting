@@ -1,7 +1,8 @@
 import pandas as pd
 from darts import TimeSeries, concatenate
-from src.load_data import extract_info
+
 from config import ROOT
+from src.load_data import extract_info
 
 RT_PATH = {
     "sari": ROOT / "data/reporting_triangle-icosari-sari.csv",

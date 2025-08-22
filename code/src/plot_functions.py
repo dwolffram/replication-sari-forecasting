@@ -1,22 +1,23 @@
+import matplotlib.pyplot as plt
+import pandas as pd
+import plotnine
+from plotnine import (
+    aes,
+    element_blank,
+    element_line,
+    facet_wrap,
+    geom_line,
+    geom_point,
+    geom_ribbon,
+    ggplot,
+    labs,
+    scale_x_date,
+    theme,
+    theme_bw,
+)
+
 from src.load_data import extract_info
 from src.load_reporting_triangle import load_frozen_truth
-import plotnine
-import pandas as pd
-from plotnine import (
-    ggplot,
-    aes,
-    geom_line,
-    facet_wrap,
-    labs,
-    theme_bw,
-    geom_ribbon,
-    geom_point,
-    scale_x_date,
-    element_line,
-    theme,
-    element_blank,
-)
-import matplotlib.pyplot as plt
 
 
 def plot_split(ts, train_end, validation_end, test_end=None, target="icosari-sari-DE"):

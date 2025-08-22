@@ -1,11 +1,13 @@
 import os
-import pandas as pd
-import numpy as np
 from pathlib import Path
+
+import numpy as np
+import pandas as pd
 from darts import TimeSeries, concatenate
 from darts.dataprocessing.transformers import StaticCovariatesTransformer
 from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder
-from config import ROOT, QUANTILES, MODEL_NAMES, SEASON_DICT
+
+from config import MODEL_NAMES, QUANTILES, ROOT, SEASON_DICT
 
 # Functions to name the components
 # For state level forecasts we remove the age group,

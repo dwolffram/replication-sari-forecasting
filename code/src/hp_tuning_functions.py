@@ -1,13 +1,15 @@
-from src.load_data import target_covariate_split, load_data, encode_static_covariates
 # import wandb
 import warnings
-import pandas as pd
+
 import numpy as np
-from epiweeks import Week
-from darts.models import TSMixerModel
-from darts import TimeSeries
+import pandas as pd
 import torch
-from config import SOURCES, TARGETS, SEASON_DICT
+from darts import TimeSeries
+from darts.models import TSMixerModel
+from epiweeks import Week
+
+from config import SEASON_DICT, SOURCES, TARGETS
+from src.load_data import encode_static_covariates, load_data, target_covariate_split
 
 
 def get_cv_chunks(ts):

@@ -1,9 +1,10 @@
+from pathlib import Path
+
 import pandas as pd
-from epiweeks import Week
 from darts.metrics.metrics import mql
 from darts.utils.likelihood_models import NegativeBinomialLikelihood
+from epiweeks import Week
 from pytorch_lightning.callbacks import RichProgressBar
-from pathlib import Path
 
 ROOT = Path.cwd().parent
 

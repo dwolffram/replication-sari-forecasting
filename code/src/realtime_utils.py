@@ -26,9 +26,7 @@ def load_latest_series(indicator="sari"):
         ts.static_covariates.age_group.index,
         f"{source}-{indicator}-" + ts.static_covariates.age_group,
     )
-    ts = ts.with_columns_renamed(
-        f"{source}-{indicator}-00+", f"{source}-{indicator}-DE"
-    )
+    ts = ts.with_columns_renamed(f"{source}-{indicator}-00+", f"{source}-{indicator}-DE")
 
     return ts
 
@@ -108,9 +106,7 @@ def load_nowcast(
         )
 
         nowcast_age = concatenate(nowcast_age, axis="sample")
-        nowcast_age.static_covariates.drop(
-            columns=["quantile"], inplace=True, errors="ignore"
-        )
+        nowcast_age.static_covariates.drop(columns=["quantile"], inplace=True, errors="ignore")
         nowcast_age = nowcast_age.with_columns_renamed(
             nowcast_age.components, [f"{source}-{indicator}-" + age]
         )
@@ -186,9 +182,7 @@ def get_preceding_thursday(date):
     Returns the date of the preceding Thursday. If 'date' is itself a Thursday, 'date' is returned.
     """
     date = pd.Timestamp(date)  # to also accept dates given as strings
-    return date - pd.Timedelta(
-        days=(date.weekday() - 3) % 7
-    )  # weekday of Thursday is 3
+    return date - pd.Timedelta(days=(date.weekday() - 3) % 7)  # weekday of Thursday is 3
 
 
 def load_realtime_training_data(as_of=None, drop_incomplete=True):
@@ -196,9 +190,7 @@ def load_realtime_training_data(as_of=None, drop_incomplete=True):
     target_sari = load_target_series("sari", as_of)
     latest_sari = load_latest_series("sari")
 
-    ts_sari = concatenate(
-        [latest_sari.drop_after(target_sari.start_time()), target_sari]
-    )
+    ts_sari = concatenate([latest_sari.drop_after(target_sari.start_time()), target_sari])
 
     # load are data
     target_are = load_target_series("are", as_of)
@@ -230,9 +222,7 @@ def compute_forecast(
     These are then aggregated into one forecast by combining all predicted paths.
     """
     indicator = target_series.components[0].split("-")[1]
-    ts_nowcast = load_nowcast(
-        forecast_date, probabilistic_nowcast, indicator, local, nowcast_model
-    )
+    ts_nowcast = load_nowcast(forecast_date, probabilistic_nowcast, indicator, local, nowcast_model)
     target_list = make_target_paths(target_series, ts_nowcast)
     target_list = [encode_static_covariates(t, ordinal=False) for t in target_list]
 
