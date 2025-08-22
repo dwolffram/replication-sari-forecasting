@@ -12,7 +12,7 @@ notebooks_to_run = [
     "plot_forecasts.ipynb",
     "evaluation.ipynb",
     "evaluation_quantiles.ipynb",
-    "diebold_mariano.ipynb"    
+    "diebold_mariano.ipynb",
 ]
 
 for notebook_path in notebooks_to_run:
@@ -23,7 +23,7 @@ for notebook_path in notebooks_to_run:
             None,
             report_mode=True,
             cwd="code/",
-            kernel_name="replication-sari"
+            kernel_name="replication-sari",
         )
         print(f"Successfully executed {notebook_path}")
     except Exception as e:
