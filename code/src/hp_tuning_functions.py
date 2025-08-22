@@ -8,118 +8,118 @@ from darts import TimeSeries
 from darts.models import TSMixerModel
 from epiweeks import Week
 
-from config import SEASON_DICT, SOURCES, TARGETS
-from src.load_data import encode_static_covariates, load_data, target_covariate_split
+# from config import SEASON_DICT, SOURCES, TARGETS
+# from src.load_data import encode_static_covariates, load_data, target_covariate_split
 
 
-def get_cv_chunks(ts):
-    """
-    Split the given timeseries into chunks corresponding to different seasons.
-    """
-    chunk_start = ts.start_time()
-    chunks = []
-    for t in list(SEASON_DICT.values()):  # iterate season ends
-        chunk = ts[chunk_start:t]
-        chunks.append(chunk)
-        chunk_start = chunk.end_time() + ts.freq
-    return chunks
+# def get_cv_chunks(ts):
+#     """
+#     Split the given timeseries into chunks corresponding to different seasons.
+#     """
+#     chunk_start = ts.start_time()
+#     chunks = []
+#     for t in list(SEASON_DICT.values()):  # iterate season ends
+#         chunk = ts[chunk_start:t]
+#         chunks.append(chunk)
+#         chunk_start = chunk.end_time() + ts.freq
+#     return chunks
 
 
-# use start=1 for test split (so the test chunk and the previous chunk stay together)
-# use start=0 for validation split
-def get_cv_series(chunks, i, start=0):
-    """
-    Turns a list of chunks into a timeseries. The chunks before the i-th chunk (included) are moved to the back of the series.
-    """
-    if i < start or i >= len(chunks):
-        print(f"Please select a value i >= {start} and i < len(chunks).")
-    elif i == len(chunks) - 1:
-        return concat_match_last(chunks)
-    else:
-        return concat_match_last(chunks[i + 1 :] + chunks[: i + 1])
+# # use start=1 for test split (so the test chunk and the previous chunk stay together)
+# # use start=0 for validation split
+# def get_cv_series(chunks, i, start=0):
+#     """
+#     Turns a list of chunks into a timeseries. The chunks before the i-th chunk (included) are moved to the back of the series.
+#     """
+#     if i < start or i >= len(chunks):
+#         print(f"Please select a value i >= {start} and i < len(chunks).")
+#     elif i == len(chunks) - 1:
+#         return concat_match_last(chunks)
+#     else:
+#         return concat_match_last(chunks[i + 1 :] + chunks[: i + 1])
 
 
-def concat_match_last(chunks):
-    """
-    Concatenate a list of time series chunks. The resulting series will have a time index matching the last provided chunk.
-    (The index of the previous chunks might therefore differ from the resulting series.)
-    """
-    ts = chunks[-1]
-    time_name = ts.time_index.name
+# def concat_match_last(chunks):
+#     """
+#     Concatenate a list of time series chunks. The resulting series will have a time index matching the last provided chunk.
+#     (The index of the previous chunks might therefore differ from the resulting series.)
+#     """
+#     ts = chunks[-1]
+#     time_name = ts.time_index.name
 
-    for c in chunks[-2::-1]:  # backwards and skip the last one
-        ts = ts.prepend_values(c.values())
+#     for c in chunks[-2::-1]:  # backwards and skip the last one
+#         ts = ts.prepend_values(c.values())
 
-    ts = TimeSeries.from_xarray(
-        ts.data_array().rename({"time": time_name})
-    )  # rename time_index
+#     ts = TimeSeries.from_xarray(
+#         ts.data_array().rename({"time": time_name})
+#     )  # rename time_index
 
-    return ts
-
-
-def create_validation_data(validation_chunks, start=0):
-    """
-    Creates all possible train-validation-splits from a list of chunks and returns them as timeseries.
-    The matching covariates are also returned.
-    """
-    targets_train = []
-    targets_validation = []
-    covariates = []
-
-    for j in range(start, len(validation_chunks)):
-        ts_validation = get_cv_series(validation_chunks, j, start=start)
-        train_end = validation_chunks[j].start_time() - validation_chunks[j].freq
-        targets_val, cov = target_covariate_split(ts_validation, TARGETS)
-        targets_trn = targets_val[:train_end]
-
-        targets_train.append(targets_trn)
-        targets_validation.append(targets_val)
-        covariates.append(cov)
-
-    return targets_train, targets_validation, covariates
+#     return ts
 
 
-def get_validation_data(test_year, sources=SOURCES, start=0):
-    if (test_year not in SEASON_DICT.keys()) or (test_year <= 2014):
-        print("Error: invalid test_year.")
-        return
+# def create_validation_data(validation_chunks, start=0):
+#     """
+#     Creates all possible train-validation-splits from a list of chunks and returns them as timeseries.
+#     The matching covariates are also returned.
+#     """
+#     targets_train = []
+#     targets_validation = []
+#     covariates = []
 
-    ts = load_data(sources)
-    ts = encode_static_covariates(ts, ordinal=False)
+#     for j in range(start, len(validation_chunks)):
+#         ts_validation = get_cv_series(validation_chunks, j, start=start)
+#         train_end = validation_chunks[j].start_time() - validation_chunks[j].freq
+#         targets_val, cov = target_covariate_split(ts_validation, TARGETS)
+#         targets_trn = targets_val[:train_end]
 
-    chunks = get_cv_chunks(ts)
+#         targets_train.append(targets_trn)
+#         targets_validation.append(targets_val)
+#         covariates.append(cov)
 
-    i = list(SEASON_DICT.keys()).index(test_year)
-    # print(chunks[i].start_time().date())
-
-    validation_chunks = chunks[i + 1 :] + chunks[:i]
-
-    targets_train, targets_validation, covariates = create_validation_data(
-        validation_chunks, start
-    )
-
-    return targets_train, targets_validation, covariates
+#     return targets_train, targets_validation, covariates
 
 
-def get_test_data(test_year, sources=SOURCES):
-    if (test_year not in SEASON_DICT.keys()) or (test_year <= 2014):
-        print("Error: invalid test_year.")
-        return
+# def get_validation_data(test_year, sources=SOURCES, start=0):
+#     if (test_year not in SEASON_DICT.keys()) or (test_year <= 2014):
+#         print("Error: invalid test_year.")
+#         return
 
-    ts = load_data(sources)
-    ts = encode_static_covariates(ts, ordinal=False)
+#     ts = load_data(sources)
+#     ts = encode_static_covariates(ts, ordinal=False)
 
-    chunks = get_cv_chunks(ts)
+#     chunks = get_cv_chunks(ts)
 
-    i = list(SEASON_DICT.keys()).index(test_year)
+#     i = list(SEASON_DICT.keys()).index(test_year)
+#     # print(chunks[i].start_time().date())
 
-    ts_test = get_cv_series(chunks, i, start=1)
+#     validation_chunks = chunks[i + 1 :] + chunks[:i]
 
-    train_end = chunks[i].start_time() - chunks[i].freq
-    targets_test, covariates = target_covariate_split(ts_test, TARGETS)
-    targets_train = targets_test[:train_end]
+#     targets_train, targets_validation, covariates = create_validation_data(
+#         validation_chunks, start
+#     )
 
-    return targets_train, targets_test, covariates
+#     return targets_train, targets_validation, covariates
+
+
+# def get_test_data(test_year, sources=SOURCES):
+#     if (test_year not in SEASON_DICT.keys()) or (test_year <= 2014):
+#         print("Error: invalid test_year.")
+#         return
+
+#     ts = load_data(sources)
+#     ts = encode_static_covariates(ts, ordinal=False)
+
+#     chunks = get_cv_chunks(ts)
+
+#     i = list(SEASON_DICT.keys()).index(test_year)
+
+#     ts_test = get_cv_series(chunks, i, start=1)
+
+#     train_end = chunks[i].start_time() - chunks[i].freq
+#     targets_test, covariates = target_covariate_split(ts_test, TARGETS)
+#     targets_train = targets_test[:train_end]
+
+#     return targets_train, targets_test, covariates
 
 
 def compute_validation_score(
@@ -144,9 +144,7 @@ def compute_validation_score(
         )
 
     else:
-        model.fit(
-            targets_train, past_covariates=covariates, sample_weight=sample_weight
-        )
+        model.fit(targets_train, past_covariates=covariates, sample_weight=sample_weight)
 
     if isinstance(targets_train, list):
         validation_start = targets_train[0].end_time() + targets_train[0].freq
@@ -248,20 +246,20 @@ def train_validation_split(series, validation_year):
     return ts_train, ts_validation
 
 
-def get_custom_weights(targets):
-    len_before = len(targets[: get_season_end(2019)].time_index)
+# def get_custom_weights(targets):
+#     len_before = len(targets[: get_season_end(2019)].time_index)
 
-    len_after = len(targets[get_season_start(2020) :].time_index)
+#     len_after = len(targets[get_season_start(2020) :].time_index)
 
-    weights = np.append(
-        np.linspace(0.5, 0.5, len_before), np.linspace(0.5, 1, len_after)
-    )
+#     weights = np.append(
+#         np.linspace(0.5, 0.5, len_before), np.linspace(0.5, 1, len_after)
+#     )
 
-    ts_weights = TimeSeries.from_times_and_values(
-        times=targets.time_index, values=weights
-    )
+#     ts_weights = TimeSeries.from_times_and_values(
+#         times=targets.time_index, values=weights
+#     )
 
-    return ts_weights
+#     return ts_weights
 
 
 def exclude_covid_weights(targets):
@@ -280,8 +278,6 @@ def exclude_covid_weights(targets):
     )
 
     # Create TimeSeries object for weights
-    ts_weights = TimeSeries.from_times_and_values(
-        times=targets.time_index, values=weights
-    )
+    ts_weights = TimeSeries.from_times_and_values(times=targets.time_index, values=weights)
 
     return ts_weights

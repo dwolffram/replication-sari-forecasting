@@ -3,15 +3,10 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from darts import TimeSeries, concatenate
 from darts.dataprocessing.transformers import StaticCovariatesTransformer
 from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder
 
 from config import MODEL_NAMES, QUANTILES, ROOT, SEASON_DICT
-
-# Functions to name the components
-# For state level forecasts we remove the age group,
-# the location is removed from forecasts for age groups.
 
 
 def contains_number(input_str):
@@ -19,17 +14,16 @@ def contains_number(input_str):
 
 
 def rename_components(ts):
+    """For state level forecasts we remove the age group, the location is removed from forecasts for age groups."""
     names = ["-".join(x) for x in ts.static_covariates_values()]
     names = [n[:-4] if "00+" in n else n for n in names]
     names = [n.replace("-DE", "") if contains_number(n) else n for n in names]
     return ts.with_columns_renamed(ts.components, names)
 
 
-# Add nans to the beginning of a series (to concatenate with another series of different length)
 def prepend_nan(series, start):
-    idx = pd.date_range(
-        start=start, end=series.start_time() - series.freq, freq=series.freq
-    )
+    """Add nans to the beginning of a series (to concatenate with another series of different length)."""
+    idx = pd.date_range(start=start, end=series.start_time() - series.freq, freq=series.freq)
 
     fill_values = np.full((len(idx), series.n_components), np.nan)
     new_series = series.prepend_values(fill_values)
@@ -37,9 +31,7 @@ def prepend_nan(series, start):
 
 
 def append_nan(series, end):
-    idx = pd.date_range(
-        start=series.end_time() + series.freq, end=end, freq=series.freq
-    )
+    idx = pd.date_range(start=series.end_time() + series.freq, end=end, freq=series.freq)
 
     fill_values = np.full((len(idx), series.n_components), np.nan)
     return series.append_values(fill_values)
@@ -67,8 +59,6 @@ def resize_timeseries(ts, start_date, end_date):
 
     return ts
 
-
-# URL = 'https://raw.githubusercontent.com/KITmetricslab/RESPINOW-Hub/main/'
 
 TARGETS_DICT = {
     "survstat": ["influenza"],  # , 'rsv'],
@@ -191,9 +181,7 @@ def reshape_forecast(ts_forecast, nowcast=False, deterministic=False):
         df_temp["forecast_date"] = df_temp.date.min() - pd.Timedelta(days=3)
 
     if deterministic:
-        df_temp = df_temp.loc[df_temp.index.repeat(len(QUANTILES))].reset_index(
-            drop=True
-        )
+        df_temp = df_temp.loc[df_temp.index.repeat(len(QUANTILES))].reset_index(drop=True)
         df_temp["quantile"] = pd.Series(QUANTILES * len(df_temp)).astype("str")
 
     df_temp["type"] = "quantile"
@@ -241,16 +229,12 @@ def reshape_hfc(hfc, nowcast=False, deterministic=False):
         if all(isinstance(item, list) for item in hfc):
             # Handle list of hfcs (global model)
             for sublist in hfc:
-                dfs.append(
-                    reshape_historical_forecasts(sublist, nowcast, deterministic)
-                )
+                dfs.append(reshape_historical_forecasts(sublist, nowcast, deterministic))
         else:
             # Handle hfc (multivariate model)
             dfs.append(reshape_historical_forecasts(hfc, nowcast, deterministic))
     else:
-        raise ValueError(
-            "Input data must be a hfc, a dictionary of hfcs, or a list of hfcs."
-        )
+        raise ValueError("Input data must be a hfc, a dictionary of hfcs, or a list of hfcs.")
 
     return pd.concat(dfs)
 
@@ -439,39 +423,37 @@ def get_split_dates(test_year):
     return train_end, validation_start, validation_end, test_start, test_end
 
 
-def combine_component_and_feature_names(ts):
-    return ts.with_columns_renamed(
-        ts.columns, ts.static_covariates.component.unique() + "__" + ts.columns
-    )
+# def combine_component_and_feature_names(ts):
+#     return ts.with_columns_renamed(
+#         ts.columns, ts.static_covariates.component.unique() + "__" + ts.columns
+#     )
 
 
-def load_features(lag=8, multiple_series=False):
-    df_features = pd.read_csv(f"../data/features/features_icosari_{lag}w.csv")
-    ts_features = TimeSeries.from_group_dataframe(
-        df_features,
-        group_cols=["component"],
-        time_col="date",
-        freq="7D",
-        fillna_value=0,
-    )
-    ts_features = [
-        combine_component_and_feature_names(ts_age) for ts_age in ts_features
-    ]
-    ts_features = [ts_age.with_static_covariates(None) for ts_age in ts_features]
+# def load_features(lag=8, multiple_series=False):
+#     df_features = pd.read_csv(f"../data/features/features_icosari_{lag}w.csv")
+#     ts_features = TimeSeries.from_group_dataframe(
+#         df_features,
+#         group_cols=["component"],
+#         time_col="date",
+#         freq="7D",
+#         fillna_value=0,
+#     )
+#     ts_features = [combine_component_and_feature_names(ts_age) for ts_age in ts_features]
+#     ts_features = [ts_age.with_static_covariates(None) for ts_age in ts_features]
 
-    if not multiple_series:
-        ts_features = concatenate(ts_features, axis="component")
+#     if not multiple_series:
+#         ts_features = concatenate(ts_features, axis="component")
 
-    return ts_features
+#     return ts_features
 
 
-def add_features(covariates, lag=8):
-    ts_features = load_features(lag=lag)
-    cov = covariates.slice_intersect(
-        ts_features
-    )  # features start a bit later because of rolling window
-    ts_features = ts_features.slice_intersect(
-        cov
-    )  # features are longer because they cover the whole period until now
-    cov = concatenate([cov.with_static_covariates(None), ts_features], axis="component")
-    return cov
+# def add_features(covariates, lag=8):
+#     ts_features = load_features(lag=lag)
+#     cov = covariates.slice_intersect(
+#         ts_features
+#     )  # features start a bit later because of rolling window
+#     ts_features = ts_features.slice_intersect(
+#         cov
+#     )  # features are longer because they cover the whole period until now
+#     cov = concatenate([cov.with_static_covariates(None), ts_features], axis="component")
+#     return cov

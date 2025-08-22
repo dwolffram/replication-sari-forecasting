@@ -1,9 +1,10 @@
-from src.load_data import encode_static_covariates, reshape_hfc, reshape_forecast
-import pandas as pd
 import numpy as np
+import pandas as pd
 from darts import TimeSeries, concatenate
 from darts.utils.ts_utils import retain_period_common_to_all
+
 from config import ROOT, SOURCE_DICT
+from src.load_data import encode_static_covariates, reshape_forecast, reshape_hfc
 
 
 def load_latest_series(indicator="sari"):
@@ -122,7 +123,8 @@ def load_nowcast(
 
 
 def make_target_paths(target_series, nowcast):
-    # cut known truth series and append nowcasted values
+    """Cut known truth series and append nowcasted values."""
+
     target_temp = target_series.drop_after(nowcast.start_time())
 
     # every entry is a multivariate timeseries (one sample path for each age group)
@@ -142,6 +144,7 @@ def make_target_paths(target_series, nowcast):
 
 
 def load_rt(indicator="sari", preprocessed=False):
+    """Load reporting triangle for a given indicator."""
     source = SOURCE_DICT[indicator]
     rt = pd.read_csv(
         ROOT
@@ -159,6 +162,7 @@ def set_last_n_values_to_nan(group):
 
 
 def target_as_of(rt, date):
+    """Return the target time series as it would have been known on the specified date."""
     date = pd.Timestamp(date)
     rt_temp = rt[rt.date <= date]
 
@@ -178,9 +182,7 @@ def target_as_of(rt, date):
 
 
 def get_preceding_thursday(date):
-    """
-    Returns the date of the preceding Thursday. If 'date' is itself a Thursday, 'date' is returned.
-    """
+    """Returns the date of the preceding Thursday. If 'date' is itself a Thursday, 'date' is returned."""
     date = pd.Timestamp(date)  # to also accept dates given as strings
     return date - pd.Timedelta(days=(date.weekday() - 3) % 7)  # weekday of Thursday is 3
 
