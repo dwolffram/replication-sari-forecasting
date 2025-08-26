@@ -12,15 +12,11 @@ RT_PATH = {
 
 def rename_columns(ts):
     names = [
-        ("" if "value" in x else "cumsum_") + "_".join(y)
-        for x, y in zip(ts.components, ts.static_covariates_values())
+        ("" if "value" in x else "cumsum_") + "_".join(y) for x, y in zip(ts.components, ts.static_covariates_values())
     ]
     names = [n.replace("DE-", "") for n in names]
     names = [n.replace("_00+", "") for n in names]
-    names = [
-        n.replace("DE_", "") if (len(n.replace("cumsum_", "").split("_")) >= 3) else n
-        for n in names
-    ]
+    names = [n.replace("DE_", "") if (len(n.replace("cumsum_", "").split("_")) >= 3) else n for n in names]
 
     return ts.with_columns_renamed(ts.components, names)
 
@@ -35,23 +31,17 @@ def load_reporting_triangle(target="sari", add_cumsum=True, shift=True):
     if add_cumsum:
         # compute cumulative values
         for i in range(min_delay, 4):
-            df[f"cumsum_{i}w"] = df.loc[:, f"value_{min_delay}w" : f"value_{i}w"].sum(
-                axis=1
-            )
+            df[f"cumsum_{i}w"] = df.loc[:, f"value_{min_delay}w" : f"value_{i}w"].sum(axis=1)
 
         if shift:
             # shift cumsum columns
             for i in range(min_delay, 4):
-                df[f"cumsum_{i}w"] = df.groupby(["age_group", "location"])[
-                    f"cumsum_{i}w"
-                ].shift(i - 4)
+                df[f"cumsum_{i}w"] = df.groupby(["age_group", "location"])[f"cumsum_{i}w"].shift(i - 4)
 
     if shift:
         # shift value columns
         for i in range(min_delay, 4):
-            df[f"value_{i}w"] = df.groupby(["age_group", "location"])[
-                f"value_{i}w"
-            ].shift(i - 4)
+            df[f"value_{i}w"] = df.groupby(["age_group", "location"])[f"value_{i}w"].shift(i - 4)
 
     df = df.dropna()
 

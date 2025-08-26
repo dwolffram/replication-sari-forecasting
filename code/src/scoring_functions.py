@@ -98,18 +98,10 @@ def compute_coverage(df):
 
     df_wide = df_wide.reset_index()
 
-    df_wide["c50"] = (df_wide["truth"] >= df_wide["quantile_0.25"]) & (
-        df_wide["truth"] <= df_wide["quantile_0.75"]
-    )
-    df_wide["c95"] = (df_wide["truth"] >= df_wide["quantile_0.025"]) & (
-        df_wide["truth"] <= df_wide["quantile_0.975"]
-    )
+    df_wide["c50"] = (df_wide["truth"] >= df_wide["quantile_0.25"]) & (df_wide["truth"] <= df_wide["quantile_0.75"])
+    df_wide["c95"] = (df_wide["truth"] >= df_wide["quantile_0.025"]) & (df_wide["truth"] <= df_wide["quantile_0.975"])
 
-    coverage_df = (
-        df_wide.groupby("model")
-        .agg(c50=("c50", "mean"), c95=("c95", "mean"))
-        .reset_index()
-    )
+    coverage_df = df_wide.groupby("model").agg(c50=("c50", "mean"), c95=("c95", "mean")).reset_index()
 
     return coverage_df
 
@@ -123,23 +115,10 @@ def compute_ae(df):
 def evaluate_models(df, level="national", by_horizon=False, by_age=False):
     df_temp = filter_by_level(df, level)
     if by_horizon:
-        wis_temp = (
-            df_temp.groupby("horizon")[df_temp.columns]
-            .apply(compute_wis)
-            .reset_index()
-            .drop(columns="level_1")
-        )
-        ae_temp = (
-            df_temp.groupby("horizon")[df_temp.columns]
-            .apply(compute_ae)
-            .reset_index()
-            .drop(columns="level_1")
-        )
+        wis_temp = df_temp.groupby("horizon")[df_temp.columns].apply(compute_wis).reset_index().drop(columns="level_1")
+        ae_temp = df_temp.groupby("horizon")[df_temp.columns].apply(compute_ae).reset_index().drop(columns="level_1")
         coverage_temp = (
-            df_temp.groupby("horizon")[df_temp.columns]
-            .apply(compute_coverage)
-            .reset_index()
-            .drop(columns="level_1")
+            df_temp.groupby("horizon")[df_temp.columns].apply(compute_coverage).reset_index().drop(columns="level_1")
         )
         results = (
             wis_temp.merge(ae_temp, on=["model", "horizon"])
@@ -148,22 +127,11 @@ def evaluate_models(df, level="national", by_horizon=False, by_age=False):
         )
     elif by_age:
         wis_temp = (
-            df_temp.groupby("age_group")[df_temp.columns]
-            .apply(compute_wis)
-            .reset_index()
-            .drop(columns="level_1")
+            df_temp.groupby("age_group")[df_temp.columns].apply(compute_wis).reset_index().drop(columns="level_1")
         )
-        ae_temp = (
-            df_temp.groupby("age_group")[df_temp.columns]
-            .apply(compute_ae)
-            .reset_index()
-            .drop(columns="level_1")
-        )
+        ae_temp = df_temp.groupby("age_group")[df_temp.columns].apply(compute_ae).reset_index().drop(columns="level_1")
         coverage_temp = (
-            df_temp.groupby("age_group")[df_temp.columns]
-            .apply(compute_coverage)
-            .reset_index()
-            .drop(columns="level_1")
+            df_temp.groupby("age_group")[df_temp.columns].apply(compute_coverage).reset_index().drop(columns="level_1")
         )
         results = (
             wis_temp.merge(ae_temp, on=["model", "age_group"])
@@ -175,8 +143,6 @@ def evaluate_models(df, level="national", by_horizon=False, by_age=False):
         ae_temp = compute_ae(df_temp)
         coverage_temp = compute_coverage(df_temp)
         results = (
-            wis_temp.merge(ae_temp, on="model")
-            .merge(coverage_temp, on="model")
-            .sort_values("wis", ignore_index=True)
+            wis_temp.merge(ae_temp, on="model").merge(coverage_temp, on="model").sort_values("wis", ignore_index=True)
         )
     return results

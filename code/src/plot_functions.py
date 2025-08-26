@@ -41,9 +41,7 @@ def reshape_truth(y):
     y = y.reset_index().melt(id_vars="date", var_name="component")
 
     # y['strata']   = y.component.apply(lambda x: x.split('-', 2)[-1].split('_')[0])
-    y["strata"] = y.component.apply(
-        lambda x: x.replace(f"{source}-{indicator}-", "").split("_")[0]
-    )
+    y["strata"] = y.component.apply(lambda x: x.replace(f"{source}-{indicator}-", "").split("_")[0])
     y[["location", "age_group"]] = y.apply(extract_info, axis=1)
 
     for q in [
@@ -92,25 +90,19 @@ def prepare_plot_data(df, y):
 def plot_forecasts(plot_data, stratum="states", start=0, stride=5, horizon=None):
     if stratum == "national":
         plotnine.options.figure_size = (6, 2.5)
-        df_temp = plot_data[
-            (plot_data.location == "DE") & (plot_data.age_group == "00+")
-        ]
+        df_temp = plot_data[(plot_data.location == "DE") & (plot_data.age_group == "00+")]
         facet = "location"
         ncol = 1
 
     elif stratum == "states":
         plotnine.options.figure_size = (12, 10)
-        df_temp = plot_data[
-            (plot_data.location != "DE") & (plot_data.age_group == "00+")
-        ]
+        df_temp = plot_data[(plot_data.location != "DE") & (plot_data.age_group == "00+")]
         facet = "location"
         ncol = 3
 
     elif stratum == "age":
         plotnine.options.figure_size = (12, 5)
-        df_temp = plot_data[
-            (plot_data.location == "DE") & (plot_data.age_group != "00+")
-        ]
+        df_temp = plot_data[(plot_data.location == "DE") & (plot_data.age_group != "00+")]
         facet = "age_group"
         ncol = 3
 
@@ -120,9 +112,7 @@ def plot_forecasts(plot_data, stratum="states", start=0, stride=5, horizon=None)
         df_temp = df_temp[df_temp.horizon == horizon]
         g = {}
     else:
-        df_temp = df_temp[
-            df_temp.forecast_date.isin(df_temp.forecast_date.unique()[start::stride])
-        ]
+        df_temp = df_temp[df_temp.forecast_date.isin(df_temp.forecast_date.unique()[start::stride])]
         g = {"group": "forecast_date"}  # required if we plot multiple horizons at once
 
     return (
@@ -145,9 +135,7 @@ def plot_forecasts(plot_data, stratum="states", start=0, stride=5, horizon=None)
     )
 
 
-def plot_importance_lgbm(
-    model, age_group="00+", horizon=0, max_features=None, y_size=8
-):
+def plot_importance_lgbm(model, age_group="00+", horizon=0, max_features=None, y_size=8):
     source = model.lagged_label_names[0].split("-")[0]
     indicator = model.lagged_label_names[0].split("-")[1]
 
@@ -161,14 +149,10 @@ def plot_importance_lgbm(
     feature_names = model.lagged_feature_names
 
     # Create a DataFrame
-    feature_importance_df = pd.DataFrame(
-        {"Feature": feature_names, "Importance": feature_importances}
-    )
+    feature_importance_df = pd.DataFrame({"Feature": feature_names, "Importance": feature_importances})
 
     # Sort the DataFrame by importance
-    feature_importance_df = feature_importance_df.sort_values(
-        by="Importance", ascending=False
-    )
+    feature_importance_df = feature_importance_df.sort_values(by="Importance", ascending=False)
 
     if max_features:
         feature_importance_df = feature_importance_df.head(max_features)
@@ -196,50 +180,30 @@ def plot_nowcasts(plot_data, stratum="national", horizon=0):
 
     if stratum == "national":
         plotnine.options.figure_size = (6, 2.5)
-        df_temp = plot_data[
-            (plot_data.location == "DE") & (plot_data.age_group == "00+")
-        ]
-        frozen_temp = df_frozen[
-            (df_frozen.location == "DE") & (df_frozen.age_group == "00+")
-        ]
+        df_temp = plot_data[(plot_data.location == "DE") & (plot_data.age_group == "00+")]
+        frozen_temp = df_frozen[(df_frozen.location == "DE") & (df_frozen.age_group == "00+")]
         facet = "location"
         ncol = 1
 
     elif stratum == "age":
         plotnine.options.figure_size = (12, 5)
-        df_temp = plot_data[
-            (plot_data.location == "DE") & (plot_data.age_group != "00+")
-        ]
-        frozen_temp = df_frozen[
-            (df_frozen.location == "DE") & (df_frozen.age_group != "00+")
-        ]
+        df_temp = plot_data[(plot_data.location == "DE") & (plot_data.age_group != "00+")]
+        frozen_temp = df_frozen[(df_frozen.location == "DE") & (df_frozen.age_group != "00+")]
         facet = "age_group"
         ncol = 3
 
     y_temp = df_temp[df_temp.type == "truth"]
 
     df_temp = df_temp[(df_temp.horizon == horizon) & (df_temp.type != "truth")]
-    y_temp = y_temp[
-        y_temp.target_end_date.between(
-            df_temp.target_end_date.min(), df_temp.target_end_date.max()
-        )
-    ]
-    frozen_temp = frozen_temp[
-        frozen_temp.date.between(
-            df_temp.target_end_date.min(), df_temp.target_end_date.max()
-        )
-    ]
+    y_temp = y_temp[y_temp.target_end_date.between(df_temp.target_end_date.min(), df_temp.target_end_date.max())]
+    frozen_temp = frozen_temp[frozen_temp.date.between(df_temp.target_end_date.min(), df_temp.target_end_date.max())]
     # Get all Sundays within the range of the dataset
-    sundays = get_sundays(
-        df_temp["target_end_date"].min(), df_temp["target_end_date"].max()
-    )
+    sundays = get_sundays(df_temp["target_end_date"].min(), df_temp["target_end_date"].max())
 
     return (
         ggplot(df_temp, aes(x="target_end_date"))
         + facet_wrap(facet, ncol=ncol, scales="free_y")
-        + geom_ribbon(
-            aes(ymin="quantile_0.025", ymax="quantile_0.975"), fill="blue", alpha=0.3
-        )
+        + geom_ribbon(aes(ymin="quantile_0.025", ymax="quantile_0.975"), fill="blue", alpha=0.3)
         + geom_line(aes(y="quantile_0.5"), color="blue")
         + geom_line(y_temp, aes(x="target_end_date", y="quantile_0.5"), color="black")
         + geom_line(frozen_temp, aes(x="date", y="value"), color="red")

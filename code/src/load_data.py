@@ -8,6 +8,17 @@ from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder
 
 from config import MODEL_NAMES, QUANTILES, ROOT, SEASON_DICT
 
+# Explicit mapping from Darts rounded quantile labels to our desired values
+Q_MAP = {
+    "q0.03": "0.025",
+    "q0.10": "0.1",
+    "q0.25": "0.25",
+    "q0.50": "0.5",
+    "q0.75": "0.75",
+    "q0.90": "0.9",
+    "q0.97": "0.975",
+}
+
 
 def contains_number(input_str):
     return any(char.isdigit() for char in input_str)
@@ -43,9 +54,7 @@ def resize_timeseries(ts, start_date, end_date):
     """
     if ts.start_time() < start_date:
         # cut off
-        ts = ts.drop_before(
-            start_date - pd.Timedelta(days=7)
-        )  # drops everything before the given date (inclusive)
+        ts = ts.drop_before(start_date - pd.Timedelta(days=7))  # drops everything before the given date (inclusive)
     elif ts.start_time() > start_date:
         # prepend nan
         ts = prepend_nan(ts, start_date)
@@ -161,16 +170,14 @@ def reshape_forecast(ts_forecast, nowcast=False, deterministic=False):
     if deterministic:
         df_temp = ts_forecast.pd_dataframe().reset_index().melt(id_vars="date")
     else:
-        df_temp = ts_forecast.quantiles_df(quantiles=QUANTILES)
-        df_temp = df_temp.reset_index().melt(id_vars="date")
-        df_temp["quantile"] = df_temp.component.apply(lambda x: x.split("_")[-1])
+        df_temp = ts_forecast.quantile(q=QUANTILES).to_dataframe()
+        df_temp = df_temp.reset_index().melt(id_vars="date", var_name="component")
+        df_temp["quantile"] = df_temp["component"].str.rsplit("_", n=1).str[-1].map(Q_MAP)
 
     source = ts_forecast.components[0].split("-")[0]
     indicator = ts_forecast.components[0].split("-")[1]
 
-    df_temp["strata"] = df_temp.component.apply(
-        lambda x: x.replace(f"{source}-{indicator}-", "").split("_")[0]
-    )
+    df_temp["strata"] = df_temp.component.apply(lambda x: x.replace(f"{source}-{indicator}-", "").split("_")[0])
     df_temp[["location", "age_group"]] = df_temp.apply(extract_info, axis=1)
 
     df_temp["horizon"] = df_temp.date.rank(method="dense").astype(int)
@@ -352,14 +359,10 @@ def load_nowcasts(
 
 
 def encode_static_covariates(ts, ordinal=False):
-    ts.static_covariates.drop(
-        columns=["source", "target", "location"], inplace=True, errors="ignore"
-    )
+    ts.static_covariates.drop(columns=["source", "target", "location"], inplace=True, errors="ignore")
 
     # Use OneHotEncoder per default, use OrdinalEncoder if 'ordinal' is True
-    scaler = StaticCovariatesTransformer(
-        transformer_cat=OrdinalEncoder() if ordinal else OneHotEncoder()
-    )
+    scaler = StaticCovariatesTransformer(transformer_cat=OrdinalEncoder() if ordinal else OneHotEncoder())
     ts = scaler.fit_transform(ts)
     return ts
 
@@ -396,9 +399,7 @@ def encode_static_covariates(ts, ordinal=False):
 #     return ts, targets, targets_train, targets_validation, targets_test, targets_eval, covariates
 
 
-def compute_historical_forecasts(
-    model, series, covariates, start, horizon, num_samples, retrain=False
-):
+def compute_historical_forecasts(model, series, covariates, start, horizon, num_samples, retrain=False):
     return model.historical_forecasts(
         series=series,
         start=start,
