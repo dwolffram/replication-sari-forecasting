@@ -41,10 +41,7 @@ MODEL_NAMES = {
 # TEST_END         = pd.Timestamp('2020-09-27')
 # EVAL_START       = pd.Timestamp('2023-01-01')
 
-SEASON_DICT = {
-    year: pd.to_datetime(Week(year + 1, 39, system="iso").enddate())
-    for year in range(2014, 2020)
-}
+SEASON_DICT = {year: pd.to_datetime(Week(year + 1, 39, system="iso").enddate()) for year in range(2014, 2020)}
 
 TARGETS = [
     "icosari-sari-DE",
@@ -94,8 +91,6 @@ SHARED_ARGS = dict(
 # }
 
 
-FORECAST_DATES = (
-    pd.date_range("2023-11-16", "2024-09-12", freq="7D").strftime("%Y-%m-%d").tolist()
-)
+FORECAST_DATES = pd.date_range("2023-11-16", "2024-09-12", freq="7D").strftime("%Y-%m-%d").tolist()
 
-RANDOM_SEEDS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+RANDOM_SEEDS = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
