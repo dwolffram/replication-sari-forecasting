@@ -37,6 +37,12 @@ From the `r/` folder:
 R -e "install.packages('renv'); renv::restore()"
 ```
 
+Note: The repository includes `.Rprofile` files (at both the root and in `r/`) that  
+automatically activate the correct `renv` environment and anchor the [`here`](https://here.r-lib.org/)  
+package to the repository root. This ensures that paths like `here("data", ...)` always work  
+consistently, whether you open the whole repo or just the R subproject.
+
+
 ## Conventions
 
 Python code lives in `code/`.
