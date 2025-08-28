@@ -30,7 +30,7 @@ uv sync
 ```
 
 ### R
-Dependencies are managed with [renv](https://rstudio.github.io/renv/).  
+To ensure reproducibility, please use R 4.5.1. Dependencies are managed with [renv](https://rstudio.github.io/renv/). 
 From the `r/` folder:
 
 ```bash
