@@ -4,7 +4,6 @@ import pandas as pd
 from darts.metrics.metrics import mql
 from darts.utils.likelihood_models import NegativeBinomialLikelihood
 from epiweeks import Week
-from pytorch_lightning.callbacks import RichProgressBar
 
 ROOT = Path.cwd().parent
 
@@ -80,7 +79,6 @@ SHARED_ARGS = dict(
         "enable_progress_bar": True,
         "enable_model_summary": False,
         "accelerator": "cpu",
-        "callbacks": [RichProgressBar(leave=True)],
     },
 )
 
