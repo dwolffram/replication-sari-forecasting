@@ -76,7 +76,7 @@ SHARED_ARGS = dict(
     output_chunk_length=HORIZON,
     likelihood=NegativeBinomialLikelihood(),
     pl_trainer_kwargs={
-        "enable_progress_bar": True,
+        "enable_progress_bar": False,
         "enable_model_summary": False,
         "accelerator": "cpu",
     },
@@ -89,6 +89,8 @@ SHARED_ARGS = dict(
 # }
 
 
-FORECAST_DATES = pd.date_range("2023-11-16", "2024-09-12", freq="7D").strftime("%Y-%m-%d").tolist()
+# FORECAST_DATES = pd.date_range("2023-11-16", "2024-09-12", freq="7D").strftime("%Y-%m-%d").tolist()
+exclude = pd.to_datetime(["2023-12-28", "2024-01-04"])
+FORECAST_DATES = pd.date_range("2023-11-16", "2024-09-12", freq="7D").difference(exclude).strftime("%Y-%m-%d").tolist()
 
 RANDOM_SEEDS = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
