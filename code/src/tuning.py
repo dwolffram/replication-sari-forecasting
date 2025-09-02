@@ -1,9 +1,13 @@
+import ast
+
 import numpy as np
 import pandas as pd
 import torch
 from darts import TimeSeries
 from darts.models import TSMixerModel
 from epiweeks import Week
+
+from config import ALLOWED_MODELS, OPTIMIZER_DICT, ROOT, ModelName
 
 
 def compute_validation_score(
@@ -92,3 +96,78 @@ def exclude_covid_weights(targets):
     ts_weights = TimeSeries.from_times_and_values(times=targets.time_index, values=weights)
 
     return ts_weights
+
+
+def get_best_parameters(
+    model: ModelName,
+    use_covariates: bool | None = None,
+    sample_weight: str | None = None,
+    clean: bool = False,
+    return_score: bool = False,
+) -> dict | tuple:
+    """
+    Loads a gridsearch CSV and returns the configuration with the lowest WIS.
+    Optionally filters by covariates and sample weight, parses covariate columns,
+    and drops error columns.
+
+    Args:
+        model (ModelName): Model name used to construct the gridsearch CSV file path.
+        use_covariates (bool | None): Filter rows by this value if specified.
+        sample_weight (str | None): Filter rows by this value if specified.
+        clean (bool): If True, strips helper keys and normalizes params
+                      (ready for model init/fit).
+        return_score (bool): If True, also return the validation score (WIS). Defaults to False.
+    Returns:
+        dict | tuple[dict, float]: The best parameter configuration. If
+        `return_score` is True, returns `(params, wis)` where `wis` is the
+        validation score.
+    """
+    if model not in ALLOWED_MODELS:
+        raise ValueError(f"Unknown model: {model}")
+
+    gs = pd.read_csv(ROOT / "code" / f"gridsearch_{model}.csv")
+
+    # Optional filtering
+    if use_covariates is not None and "use_covariates" in gs.columns:
+        gs = gs[gs["use_covariates"] == use_covariates]
+    if sample_weight is not None and "sample_weight" in gs.columns:
+        gs = gs[gs["sample_weight"] == sample_weight]
+
+    # Convert string representations of covariate lags back into Python objects
+    for col in ["lags_past_covariates", "lags_future_covariates"]:
+        if col in gs.columns:
+            gs[col] = gs[col].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else x)
+
+    # Drop error columns if present
+    gs = gs.drop(columns=[c for c in ["error_flag", "error_msg"] if c in gs.columns])
+
+    # Find row with lowest WIS
+    best_row = gs.loc[gs["WIS"].idxmin()].to_dict()
+    wis = best_row.pop("WIS")
+
+    # Remove extra WIS columns if present
+    for key in ["WIS_1", "WIS_2", "WIS_3", "WIS_std"]:
+        best_row.pop(key, None)
+
+    if clean:
+        # Drop lag params if covariates were disabled
+        if best_row.get("use_covariates") is False:
+            best_row.pop("lags_past_covariates", None)
+
+        # Remove meta flags
+        # Some keys aren't present for both model families; pop(..., None) is safe
+        for k in ("use_covariates", "sample_weight", "model", "use_features"):
+            best_row.pop(k, None)
+
+        # Normalize optimizer fields
+        if "optimizer" in best_row:
+            optimizer = best_row.pop("optimizer")
+            best_row["optimizer_cls"] = OPTIMIZER_DICT[optimizer]
+            best_row["optimizer_kwargs"] = {
+                "lr": best_row.pop("optimizer_kwargs.lr", None),
+                "weight_decay": best_row.pop("optimizer_kwargs.weight_decay", None),
+            }
+
+    params = {k: best_row[k] for k in sorted(best_row)}
+
+    return (params, float(wis)) if return_score else params
