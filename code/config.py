@@ -1,11 +1,27 @@
 from pathlib import Path
+from typing import Literal, get_args
 
 import pandas as pd
 from darts.metrics.metrics import mql
 from darts.utils.likelihood_models import NegativeBinomialLikelihood
 from epiweeks import Week
+from torch.optim import SGD, Adam, AdamW
 
 ROOT = Path.cwd().parent
+
+DataMode = Literal["all", "no_covid", "no_covariates"]
+ModelName = Literal["lightgbm", "tsmixer"]
+
+ALLOWED_DATA_MODES = set(get_args(DataMode))
+ALLOWED_MODELS = set(get_args(ModelName))
+
+# map data_mode → (use_covariates, sample_weight)
+DATA_MODE_CONFIG = {
+    "all": (True, "linear"),
+    "no_covid": (True, "no-covid"),
+    "no_covariates": (False, "linear"),
+}
+
 
 MODEL_NAMES = {
     "KIT-MeanEnsemble": "Ensemble",
@@ -82,12 +98,11 @@ SHARED_ARGS = dict(
     },
 )
 
-# OPTIMIZER_DICT = {
-#     "Adam" : torch.optim.Adam,
-#     "AdamW" : torch.optim.AdamW,
-#     "SGD": torch.optim.SGD
-# }
-
+OPTIMIZER_DICT = {
+    "Adam": Adam,
+    "AdamW": AdamW,
+    "SGD": SGD,
+}
 
 # FORECAST_DATES = pd.date_range("2023-11-16", "2024-09-12", freq="7D").strftime("%Y-%m-%d").tolist()
 exclude = pd.to_datetime(["2023-12-28", "2024-01-04"])
