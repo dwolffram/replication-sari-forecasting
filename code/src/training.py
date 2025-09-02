@@ -18,7 +18,7 @@ from config import (
     DataMode,
     ModelName,
 )
-from src.hp_tuning_functions import exclude_covid_weights, get_best_parameters
+from src.tuning import exclude_covid_weights, get_best_parameters
 from src.realtime_utils import (
     load_realtime_training_data,
 )

@@ -15,3 +15,4 @@ def silence():
     warnings.filterwarnings("ignore", message=r"pkg_resources is deprecated", category=UserWarning)
 
     logging.getLogger("pytorch_lightning.utilities.rank_zero").setLevel(logging.WARNING)
+    logging.getLogger("pytorch_lightning.accelerators.cuda").setLevel(logging.WARNING)
