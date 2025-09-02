@@ -127,7 +127,8 @@ def get_best_parameters(
     use_covariates: bool | None = None,
     sample_weight: str | None = None,
     clean: bool = False,
-) -> dict:
+    return_score: bool = False,
+) -> dict | tuple:
     """
     Loads a gridsearch CSV and returns the configuration with the lowest WIS.
     Optionally filters by covariates and sample weight, parses covariate columns,
@@ -139,9 +140,11 @@ def get_best_parameters(
         sample_weight (str | None): Filter rows by this value if specified.
         clean (bool): If True, strips helper keys and normalizes params
                       (ready for model init/fit).
-
+        return_score (bool): If True, also return the validation score (WIS). Defaults to False.
     Returns:
-        dict: Best parameter configuration.
+        dict | tuple[dict, float]: The best parameter configuration. If
+        `return_score` is True, returns `(params, wis)` where `wis` is the
+        validation score.
     """
     if model not in ALLOWED_MODELS:
         raise ValueError(f"Unknown model: {model}")
@@ -170,8 +173,6 @@ def get_best_parameters(
     for key in ["WIS_1", "WIS_2", "WIS_3", "WIS_std"]:
         best_row.pop(key, None)
 
-    print(f"WIS of best run: {wis:.3f}")
-
     if clean:
         # Drop lag params if covariates were disabled
         if best_row.get("use_covariates") is False:
@@ -190,4 +191,7 @@ def get_best_parameters(
                 "lr": best_row.pop("optimizer_kwargs.lr", None),
                 "weight_decay": best_row.pop("optimizer_kwargs.weight_decay", None),
             }
-    return {k: best_row[k] for k in sorted(best_row)}
+
+    params = {k: best_row[k] for k in sorted(best_row)}
+
+    return (params, float(wis)) if return_score else params
