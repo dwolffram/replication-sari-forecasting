@@ -305,8 +305,11 @@ def load_predictions(
     include_truth=True,
     target=True,
 ):
-    path_forecasts = Path.cwd().parent / "forecasts"
-    files = list(path_forecasts.rglob("*.csv"))
+    path_forecasts = ROOT / "forecasts"
+    files = [
+        f for f in path_forecasts.rglob("*.csv")
+        if "checkpoint" not in f.name
+    ]
 
     df = pd.concat(
         (pd.read_csv(f).assign(model=f.stem.split("-", 5)[-1]) for f in files),
