@@ -95,6 +95,7 @@ SHARED_ARGS = dict(
         "enable_progress_bar": False,
         "enable_model_summary": False,
         "accelerator": "cpu",
+        "logger": False,
     },
 )
 
