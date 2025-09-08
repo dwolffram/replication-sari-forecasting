@@ -125,7 +125,7 @@ def get_best_parameters(
     if model not in ALLOWED_MODELS:
         raise ValueError(f"Unknown model: {model}")
 
-    gs = pd.read_csv(ROOT / "code" / f"gridsearch_{model}.csv")
+    gs = pd.read_csv(ROOT / "results" / "tuning" / f"gridsearch_{model}.csv")
 
     # Optional filtering
     if use_covariates is not None and "use_covariates" in gs.columns:
