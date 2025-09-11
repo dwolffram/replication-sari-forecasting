@@ -23,7 +23,7 @@ DATA_MODE_CONFIG = {
 }
 
 MODEL_NAMES = {
-    "KIT-MeanEnsemble": "Ensemble",
+    "ensemble": "Ensemble",
     "lightgbm-coupling": "LightGBM",
     "lightgbm-no_covariates-coupling": "LightGBM-NoCovariates",
     "lightgbm-no_covid-coupling": "LightGBM-NoCovid",
@@ -43,7 +43,7 @@ MODEL_NAMES = {
     "hhh4-naive": "hhh4-Naive",
     "hhh4-shuffle": "hhh4-Shuffle",
     "hhh4-vincentization": "hhh4-Vincentization",
-    "KIT-simple_nowcast": "Nowcast",
+    "simple_nowcast": "Nowcast",
     "persistence": "Persistence",
     "baseline": "Historical",
     "tscount_simple": "TSCount-Simple",
