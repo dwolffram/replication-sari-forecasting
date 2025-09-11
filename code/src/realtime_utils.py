@@ -80,7 +80,7 @@ def load_nowcast(
     if local:
         filepath = (
             ROOT
-            / f"{f'nowcasts/KIT-{model}' if indicator == 'sari' else '../ari/nowcasts'}/{forecast_date}-{source}-{indicator}-KIT-{model}.csv"
+            / f"{f'nowcasts/{model}' if indicator == 'sari' else '../ari/nowcasts'}/{forecast_date}-{source}-{indicator}-{model}.csv"
         )
     else:
         filepath = f"https://raw.githubusercontent.com/KITmetricslab/RESPINOW-Hub/refs/heads/main/submissions/{source}/{indicator}/KIT-{model}/{forecast_date}-{source}-{indicator}-KIT-{model}.csv"

@@ -92,7 +92,7 @@ for (i in seq_along(forecast_dates)) {
   }
 
   # write out:
-  model_name <- "KIT-simple_nowcast"
+  model_name <- "simple_nowcast"
   outdir <- here("nowcasts", model_name)
   dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
 
