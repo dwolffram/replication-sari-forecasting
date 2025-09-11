@@ -4,7 +4,7 @@
 
 ######################################################
 # Settings specific to this file:
-label <- "hhh4_shuffle"
+label <- "hhh4-shuffle"
 # not excluding the COVID period in this file
 exclusion_period <- NULL
 # forecasts for different nowcast paths are aggregated by linear pool

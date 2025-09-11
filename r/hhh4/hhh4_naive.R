@@ -11,7 +11,7 @@ Sys.setlocale("LC_ALL", "C")
 
 ######################################################
 # Settings specific to this file:
-label <- "hhh4_naive"
+label <- "hhh4-naive"
 # Not excluding the COVID period in this file
 exclusion_period <- as.Date(NULL)
 # there is no nowcasting happening here, thus no specification of aggregate_paths and shuffle_paths
@@ -46,8 +46,7 @@ triangle <- read.csv(
 # Generate predictions
 
 # create directory if needed:
-model_name <- paste0("KIT-", label)
-dir <- here("forecasts", model_name)
+dir <- here("forecasts", label)
 folder_exists <- dir.exists(dir)
 if (!folder_exists) {
   dir.create(dir)
@@ -163,7 +162,7 @@ for (i in seq_along(forecast_dates)) {
     "-",
     disease,
     "-",
-    model_name,
+    label,
     ".csv"
   )
 
@@ -171,7 +170,7 @@ for (i in seq_along(forecast_dates)) {
     all_fc,
     file = here(
       "forecasts",
-      model_name,
+      label,
       filename
     ),
     row.names = FALSE

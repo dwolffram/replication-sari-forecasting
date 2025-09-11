@@ -3,7 +3,7 @@
 
 ######################################################
 # Settings specific to this file:
-label <- "hhh4_default"
+label <- "hhh4-coupling"
 # not excluding the COVID period in this file
 exclusion_period <- as.Date(NULL)
 # forecasts for different nowcast paths are aggregated by linear pool

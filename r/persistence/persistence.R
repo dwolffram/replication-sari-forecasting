@@ -93,7 +93,7 @@ for (i in seq_along(forecast_dates)) {
   }
 
   # write out:
-  model_name <- "KIT-persistence"
+  model_name <- "persistence"
   outdir <- here("forecasts", model_name)
   dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
 

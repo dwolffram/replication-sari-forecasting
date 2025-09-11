@@ -21,8 +21,7 @@ if (skip_last) {
 # Generate predictions
 
 # create directory for outputs if needed:
-model_name <- paste0("KIT-", label)
-dir <- here("forecasts", model_name)
+dir <- here("forecasts", label)
 folder_exists <- dir.exists(dir)
 if (!folder_exists) {
   dir.create(dir)
@@ -147,7 +146,7 @@ for (i in seq_along(forecast_dates)) {
     "-",
     disease,
     "-",
-    model_name,
+    label,
     ".csv"
   )
 
@@ -155,7 +154,7 @@ for (i in seq_along(forecast_dates)) {
     all_fc,
     file = here(
       "forecasts",
-      model_name,
+      label,
       filename
     ),
     row.names = FALSE

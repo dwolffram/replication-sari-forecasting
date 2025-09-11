@@ -3,7 +3,7 @@
 
 ######################################################
 # Settings specific to this file:
-label <- "hhh4_exclude_covid"
+label <- "hhh4-no_covid-coupling"
 # not excluding the COVID period in this file (this is the relevant change)
 exclusion_period <- seq(
   from = as.Date("2019-06-30"),

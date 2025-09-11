@@ -5,7 +5,7 @@
 
 ######################################################
 # Settings specific to this file:
-label <- "hhh4_vincentization"
+label <- "hhh4-vincentization"
 # not excluding the COVID period in this file
 exclusion_period <- NULL
 # forecasts for different nowcast paths are aggregated by linear pool
