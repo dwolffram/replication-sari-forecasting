@@ -1,6 +1,7 @@
-library(tidyverse)
+library(dplyr)
+library(readr)
 
-models <- c("KIT-hhh4", "lightgbm", "tsmixer")
+models <- c("hhh4-coupling", "lightgbm-coupling", "tsmixer-coupling")
 
 load_member_models <- function(models, forecast_date) {
   df <- data.frame()
