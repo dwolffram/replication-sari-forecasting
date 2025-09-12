@@ -49,8 +49,8 @@ MODEL_NAMES = {
     "simple_nowcast": "Nowcast",
     "persistence": "Persistence",
     "historical": "Historical",
-    "tscount_simple": "TSCount-Simple",
-    "tscount_extended": "TSCount-Extended",
+    "tscount-simple": "TSCount-Simple",
+    "tscount-extended": "TSCount-Extended",
 }
 
 # TRAIN_END        = pd.Timestamp('2018-09-30')
