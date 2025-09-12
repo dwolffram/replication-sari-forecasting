@@ -52,18 +52,17 @@ compute_ensemble <- function(models, forecast_date) {
 }
 
 
-# Example
-forecast_date <- "2023-12-14"
-df <- load_member_models(models, forecast_date)
-df <- compute_ensemble(models, forecast_date)
+dir.create(
+  here("forecasts", "ensemble"),
+  recursive = TRUE,
+  showWarnings = FALSE
+)
 
-
-# Compute all
-forecast_dates <- as.character(seq(
-  from = as.Date("2023-12-14"),
-  to = as.Date("2024-09-19"),
-  by = 7
-))
+forecast_dates <- read.csv(here(
+  "r",
+  "auxiliary",
+  "forecast_dates.csv"
+))$forecast_date
 
 
 for (forecast_date in forecast_dates) {
