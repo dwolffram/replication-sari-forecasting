@@ -48,7 +48,7 @@ MODEL_NAMES = {
     "hhh4-vincentization": "hhh4-Vincentization",
     "simple_nowcast": "Nowcast",
     "persistence": "Persistence",
-    "baseline": "Historical",
+    "historical": "Historical",
     "tscount_simple": "TSCount-Simple",
     "tscount_extended": "TSCount-Extended",
 }
