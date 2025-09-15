@@ -53,12 +53,72 @@ MODEL_NAMES = {
     "tscount-extended": "TSCount-Extended",
 }
 
-# TRAIN_END        = pd.Timestamp('2018-09-30')
-# VALIDATION_START = pd.Timestamp('2018-10-07')
-# VALIDATION_END   = pd.Timestamp('2019-09-29')
-# TEST_START       = pd.Timestamp('2019-10-06')
-# TEST_END         = pd.Timestamp('2020-09-27')
-# EVAL_START       = pd.Timestamp('2023-01-01')
+MODEL_COLORS = {
+    "Ensemble": "#009E73",
+    "LightGBM": "#B30000",
+    "LightGBM-NoCovariates": "#B30000",
+    "LightGBM-NoCovid": "#B30000",
+    "LightGBM-Oracle": "#B30000",
+    "LightGBM-Discard": "#B30000",
+    "LightGBM-Naive": "#B30000",
+    "TSMixer": "#E69F00",
+    "TSMixer-Covariates": "#E69F00",
+    "TSMixer-Covariates-Discard": "#E69F00",
+    "TSMixer-Covariates-Naive": "#E69F00",
+    "TSMixer-Covariates-Oracle": "#E69F00",
+    "TSMixer-NoCovid": "#E69F00",
+    "TSMixer-Oracle": "#E69F00",
+    "TSMixer-Discard": "#E69F00",
+    "TSMixer-Naive": "#E69F00",
+    "hhh4": "#3C4AAD",
+    "hhh4-NoCovid": "#3C4AAD",
+    "hhh4-Oracle": "#3C4AAD",
+    "hhh4-Shuffle": "#3C4AAD",
+    "hhh4-Discard": "#3C4AAD",
+    "hhh4-Naive": "#3C4AAD",
+    "hhh4-Vincentization": "#3C4AAD",
+    "TSCount-Simple": "#69e2d1",
+    "TSCount-Extended": "#69e2d1",
+    "Nowcast": "#56B4E9",
+    "Historical": "#000000",
+    "Persistence": "#80471C",
+}
+
+WIS_ALPHA = {"underprediction": 0.9, "spread": 0.5, "overprediction": 0.1}
+
+MODEL_ORDER = [
+    "Nowcast",
+    "Ensemble",
+    "LightGBM",
+    "LightGBM-NoCovariates",
+    "LightGBM-NoCovid",
+    "LightGBM-Oracle",
+    "LightGBM-Discard",
+    "LightGBM-Naive",
+    "TSMixer",
+    "TSMixer-Oracle",
+    "TSMixer-Discard",
+    "TSMixer-Naive",
+    "TSMixer-Covariates",
+    # "TSMixer-Covariates-Discard",
+    # "TSMixer-Covariates-Naive",
+    # "TSMixer-Covariates-Oracle",
+    "TSMixer-NoCovid",
+    "hhh4",
+    "hhh4-Shuffle",
+    "hhh4-NoCovid",
+    "hhh4-Oracle",
+    "hhh4-Discard",
+    "hhh4-Naive",
+    "hhh4-Vincentization",
+    "TSCount-Simple",
+    "TSCount-Extended",
+    "Persistence",
+    "Historical",
+]
+
+MAIN_MODELS = ["Ensemble", "LightGBM", "TSMixer", "hhh4", "Historical", "Persistence"]
+
 
 SEASON_DICT = {year: pd.to_datetime(Week(year + 1, 39, system="iso").enddate()) for year in range(2014, 2020)}
 
