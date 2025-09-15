@@ -28,7 +28,7 @@ messages <- FALSE
 n_history_dispersion <- 15
 n_history_expectations <- 15
 max_delay <- 4
-max_horizon <- 3
+max_horizon <- 4
 quantile_levels <- seq(2.5, 97.5, 2.5) / 100
 
 # dates for which to produce nowcasts (stored centrally):
