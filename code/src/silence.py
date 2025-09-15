@@ -16,3 +16,7 @@ def silence():
 
     logging.getLogger("pytorch_lightning.utilities.rank_zero").setLevel(logging.WARNING)
     logging.getLogger("pytorch_lightning.accelerators.cuda").setLevel(logging.WARNING)
+
+
+def silence_darts_warnings():
+    logging.getLogger("darts").setLevel(logging.ERROR)
