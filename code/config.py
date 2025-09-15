@@ -7,7 +7,7 @@ from darts.utils.likelihood_models import NegativeBinomialLikelihood
 from epiweeks import Week
 from torch.optim import SGD, Adam, AdamW
 
-ROOT = Path.cwd().parent
+ROOT = Path(__file__).resolve().parents[1]
 
 DataMode = Literal["all", "no_covid", "no_covariates"]
 ModelName = Literal["lightgbm", "tsmixer"]
