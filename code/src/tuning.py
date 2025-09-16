@@ -59,10 +59,6 @@ def compute_validation_score(
     return score if not np.isnan(score) else float("inf")
 
 
-def get_season_start(start_year):
-    return pd.to_datetime(Week(start_year, 40, system="iso").enddate())
-
-
 def get_season_end(start_year):
     return pd.to_datetime(Week(start_year + 1, 39, system="iso").enddate())
 

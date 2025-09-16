@@ -18,10 +18,10 @@ from config import (
     DataMode,
     ModelName,
 )
-from src.tuning import exclude_covid_weights, get_best_parameters
 from src.realtime_utils import (
     load_realtime_training_data,
 )
+from src.tuning import exclude_covid_weights, get_best_parameters
 
 
 def train_model(

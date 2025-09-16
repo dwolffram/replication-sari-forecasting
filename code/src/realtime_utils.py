@@ -4,7 +4,6 @@ from darts import TimeSeries, concatenate
 from darts.utils.ts_utils import retain_period_common_to_all
 
 from config import ROOT, SOURCE_DICT
-from src.load_data import encode_static_covariates, reshape_forecast, reshape_hfc
 
 
 def load_latest_series(indicator="sari"):
@@ -196,57 +195,3 @@ def load_realtime_training_data(as_of=None, drop_incomplete=True):
 
     else:
         return ts_sari, ts_are
-
-
-def compute_forecast(
-    model,
-    target_series,
-    covariates,
-    forecast_date,
-    horizon,
-    num_samples,
-    vincentization=True,
-    probabilistic_nowcast=True,
-    local=True,
-    nowcast_model="simple_nowcast",
-):
-    """
-    For every sample path given by the nowcasted quantiles, a probabilistic forecast is computed.
-    These are then aggregated into one forecast by combining all predicted paths.
-    """
-    indicator = target_series.components[0].split("-")[1]
-    ts_nowcast = load_nowcast(forecast_date, probabilistic_nowcast, indicator, local, nowcast_model)
-    target_list = make_target_paths(target_series, ts_nowcast)
-    target_list = [encode_static_covariates(t, ordinal=False) for t in target_list]
-
-    covariates = [covariates] * len(target_list) if covariates else None
-
-    fct = model.predict(
-        n=horizon,
-        series=target_list,
-        past_covariates=covariates,
-        num_samples=num_samples,
-    )
-
-    if vincentization:
-        df = reshape_hfc(fct)
-        df = (
-            df.groupby(
-                [
-                    "location",
-                    "age_group",
-                    "forecast_date",
-                    "target_end_date",
-                    "horizon",
-                    "type",
-                    "quantile",
-                ]
-            )
-            .agg({"value": "mean"})
-            .reset_index()
-        )
-    else:
-        ts_forecast = concatenate(fct, axis="sample")
-        df = reshape_forecast(ts_forecast)
-
-    return df
