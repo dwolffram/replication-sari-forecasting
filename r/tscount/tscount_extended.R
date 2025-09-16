@@ -11,7 +11,7 @@ Sys.setlocale("LC_ALL", "C")
 
 ######################################################
 # Settings specific to this file:
-label <- "tscount_extended"
+label <- "tscount-extended"
 # Model (implemented: hhh4 and tscount following Agosto et al)
 # Not excluding the COVID period in this file
 exclusion_period <- as.Date(NULL)
