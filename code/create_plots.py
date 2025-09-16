@@ -2,7 +2,12 @@ import os
 
 import papermill as pm
 
+from config import ROOT
+
 os.environ["MPLBACKEND"] = "Agg"
+
+PATH_FIGURES = ROOT / "figures"
+PATH_FIGURES.mkdir(parents=True, exist_ok=True)
 
 notebooks_to_run = [
     "plot_sari.ipynb",
