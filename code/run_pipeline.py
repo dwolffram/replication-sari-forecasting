@@ -5,11 +5,13 @@ import subprocess
 import papermill as pm
 
 from config import ROOT
+from src.r_utils import detect_rscript
 
 # Headless plotting for matplotlib inside notebooks
 os.environ["MPLBACKEND"] = "Agg"
 
-RSCRIPT = "C:\\Program Files\\R\\R-4.5.1\\bin\\Rscript.exe"
+# Locate Rscript matching the required version
+RSCRIPT = detect_rscript()
 
 # Ensure output dirs exist
 for p in [
@@ -146,7 +148,7 @@ def main(argv=None):
     if args.skip:
         stages = [s for s in stages if s not in args.skip]
 
-    print("=== Selected stages ===")
+    print("\n=== Selected stages ===")
     for s in stages:
         print(f"  - {s}")
 
