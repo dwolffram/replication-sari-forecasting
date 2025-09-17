@@ -58,6 +58,12 @@ uv sync
 
 This will create a local `.venv/` and install all dependencies specified in `pyproject.toml` and `uv.lock`. It will also automatically install the required Python version if it is not already available on your system.
 
+To run the notebooks with this environment, you must first register it as a Jupyter kernel:
+
+``` bash
+uv run -m ipykernel install --user --name=replication-sari
+```
+
 ### R
 
 To ensure reproducibility, please use **R 4.5.1.** Dependencies are managed with [renv](https://rstudio.github.io/renv/). From the `r/` folder, restore the environment with:
@@ -151,3 +157,14 @@ The pipeline can be executed with different options from the repository root.\
     ```
 
 ⚠️ **Note:** The `tuning` stage can take a very long time (several days). If you do not want to run it, use `--skip tuning`
+
+#### Requirement: correct R version
+
+When running the pipeline, make sure that the `Rscript` command points to the correct R version (**4.5.1**).\
+On some systems, the default `Rscript` may refer to an older version of R.
+
+You can check this with:
+
+``` bash
+Rscript --version
+```
