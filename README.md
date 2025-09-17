@@ -98,7 +98,6 @@ The repository contains a helper script [`run_pipeline.py`](./code/run_pipeline.
 
 ### Pipeline structure
 
-```{=html}
 <!-- The pipeline runs through the following stages:
 
 1.  **exploration**\
@@ -139,7 +138,7 @@ The repository contains a helper script [`run_pipeline.py`](./code/run_pipeline.
     -   `evaluation.ipynb`
     -   `evaluation_quantiles.ipynb`
     -   `diebold_mariano.ipynb` -->
-```
+
 
 The pipeline runs through the following stages:
 
@@ -173,7 +172,7 @@ The pipeline runs through the following stages:
 
 <details>
 
-<summary>\*<b>training</b>: Train final models with tuned hyperparameters.</summary>
+<summary><b>training</b>: Train final models with tuned hyperparameters.</summary>
 
 -   `train_models.ipynb`
 
