@@ -33,20 +33,41 @@ Python code lives in `code/`. R code lives in `r/`, with its own environment. Sh
 
 ### Python
 
-Managed via [uv](https://github.com/astral-sh/uv).\
-Install dependencies from the repo root:
+The project uses [uv](https://github.com/astral-sh/uv) to manage the Python environment.\
+Install `uv` on your system as follows:
+
+-   **Linux / macOS**
+
+``` bash
+curl -LsSf https://astral.sh/uv/install.sh \| sh
+```
+
+-   **Windows**
+
+``` bash
+irm https://astral.sh/uv/install.ps1 | iex
+```
+
+*(In case of problems, please refer to the official [installation guide](https://docs.astral.sh/uv/getting-started/installation/).)*
+
+Once `uv` is installed, set up the environment from the repository root:
 
 ``` bash
 uv sync
 ```
 
+This will create a local `.venv/` and install all dependencies specified in `pyproject.toml` and `uv.lock`. It will also automatically install the required Python version if it is not already available on your system.
+
 ### R
 
-To ensure reproducibility, please use R 4.5.1. Dependencies are managed with [renv](https://rstudio.github.io/renv/). From the `r/` folder:
+To ensure reproducibility, please use **R 4.5.1.** Dependencies are managed with [renv](https://rstudio.github.io/renv/). From the `r/` folder, restore the environment with:
 
 ``` bash
 R -e "install.packages('renv'); renv::restore()"
 ```
+
+This will restore all R package dependencies as specified in `renv.lock`. \
+⚠️ Unlike `uv`, `renv` does not install R itself — you must install R 4.5.1 manually.
 
 Note: The repository includes `.Rprofile` files (at both the root and in `r/`) that automatically activate the correct `renv` environment and anchor the [`here`](https://here.r-lib.org/) package to the repository root. This ensures that paths like `here("data", ...)` always work consistently, whether you open the whole repo or just the R subproject.
 
@@ -101,30 +122,31 @@ The pipeline runs through the following stages:
 
 ### Usage
 
-The pipeline can be executed with different options from the repository root:
+The pipeline can be executed with different options from the repository root.\
+(*We use `uv run` instead of `python` to ensure the script is executed inside the correct environment managed by `uv`.*)
 
 -   Run the **entire pipeline**
 
     ``` bash
-    python run_pipeline.py
+    uv run run_pipeline.py
     ```
 
 -   Run a **single stage**
 
     ``` bash
-    python run_pipeline.py --stage training
+    uv run run_pipeline.py --stage training
     ```
 
 -   Run a **contiguous range of stages**
 
     ``` bash
-    python run_pipeline.py --start forecasts --end scores
+    uv run run_pipeline.py --start forecasts --end scores
     ```
 
 -   Run everything **except selected stages**
 
     ``` bash
-    python run_pipeline.py --skip tuning
+    uv run run_pipeline.py --skip tuning
     ```
 
 ⚠️ **Note:** The `tuning` stage can take a very long time (several days). If you do not want to run it, use `--skip tuning`
