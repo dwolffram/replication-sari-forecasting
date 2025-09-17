@@ -75,7 +75,8 @@ Note: The repository includes `.Rprofile` files (at both the root and in `r/`) t
 
 ## Running the Pipeline
 
-The repository contains a helper script [`run_pipeline.py`](./code/run_pipeline.py) that orchestrates the execution of all notebooks and R scripts in a defined order. This ensures reproducibility of results and allows running the full pipeline or just selected parts of it.
+The repository contains a helper script [`run_pipeline.py`](./code/run_pipeline.py) that orchestrates the execution of all notebooks and R scripts in a defined order. This ensures reproducibility of results and allows running the full pipeline or just selected parts of it.\
+*(If preferred, you can also open and run the individual notebooks or R scripts manually.)*
 
 ### Pipeline structure
 
