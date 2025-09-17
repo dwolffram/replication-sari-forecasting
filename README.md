@@ -50,6 +50,8 @@ irm https://astral.sh/uv/install.ps1 | iex
 
 *(In case of problems, please refer to the official [installation guide](https://docs.astral.sh/uv/getting-started/installation/).)*
 
+------------------------------------------------------------------------
+
 Once `uv` is installed, set up the environment from the repository root:
 
 ``` bash
@@ -71,6 +73,8 @@ uv run jupyter lab
 ```
 
 This provides a browser-based interface, useful if you don't have a preferred IDE installed. After launching, select the kernel *replication-sari* when opening notebooks.
+
+------------------------------------------------------------------------
 
 ### R
 
@@ -94,7 +98,7 @@ The repository contains a helper script [`run_pipeline.py`](./code/run_pipeline.
 
 ### Pipeline structure
 
-The pipeline runs through the following stages:
+<!-- The pipeline runs through the following stages:
 
 1.  **exploration**\
     Exploratory data analysis and visualization.
@@ -133,7 +137,81 @@ The pipeline runs through the following stages:
     -   `plot_forecasts.ipynb`
     -   `evaluation.ipynb`
     -   `evaluation_quantiles.ipynb`
-    -   `diebold_mariano.ipynb`
+    -   `diebold_mariano.ipynb` -->
+
+
+The pipeline runs through the following stages:
+
+<details>
+<summary>**exploration**: Exploratory data analysis and visualization.</summary>
+
+- `plot_sari.ipynb`: visualize SARI data  
+- `plot_ari.ipynb`: visualize ARI data  
+- `plot_delays.ipynb`: analyze reporting delays  
+- `autocorrelation.ipynb`: investigate correlation structure of time series 
+ 
+</details>
+
+<details>
+<summary>**nowcasts**: Real-time estimation of current case counts.</summary>
+
+- `nowcasting/compute_nowcasts.R`  
+
+</details>
+
+<details>
+<summary>**tuning**: Hyperparameter tuning for machine learning models (⚠️ may take several days).</summary>
+  
+- `tuning_lightgbm.ipynb`  
+- `tuning_tsmixer.ipynb`  
+
+</details>
+
+<details>
+<summary>**training**: Train final models with tuned hyperparameters.</summary>
+  
+- `train_models.ipynb`  
+
+</details>
+
+<details>
+<summary>**forecasts**: Generate forecasts with different model variants.</summary>
+ 
+- `baseline_historical.ipynb`: historical baseline model  
+- `compute_forecasts.ipynb`: compute ML-based forecasts  
+- `persistence/persistence.R`: persistence baseline  
+- `hhh4/hhh4_default.R`, `hhh4/hhh4_exclude_covid.R`, `hhh4/hhh4_naive.R`,  
+  `hhh4/hhh4_oracle.R`, `hhh4/hhh4_shuffle.R`, `hhh4/hhh4_skip.R`,  
+  `hhh4/hhh4_vincentization.R`: hhh4 model variants  
+- `tscount/tscount_extended.R`, `tscount/tscount_simple.R`: tscount models  
+
+</details>
+
+<details>
+<summary>**ensemble**: Combine forecasts into an ensemble.</summary>
+
+- `compute_ensemble.R`  
+
+</details>
+
+<details>
+<summary>**scores**: Compute forecast evaluation scores.</summary>
+
+- `compute_scores.ipynb`  
+
+</details>
+
+<details>
+<summary>**evaluation**: Final visualization and evaluation of forecasts.</summary>
+
+- `plot_nowcasts.ipynb`  
+- `plot_forecasts.ipynb`  
+- `evaluation.ipynb`  
+- `evaluation_quantiles.ipynb`  
+- `diebold_mariano.ipynb`  
+
+</details>
+
 
 ### Usage
 
