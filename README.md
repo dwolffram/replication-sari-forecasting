@@ -4,22 +4,32 @@
 
 Daniel Wolffram, Johannes Bracher
 
+------------------------------------------------------------------------
+
 ## Repository Structure
 
 -   `code/` — Python project (primary codebase)
-    -   `src/` — reusable Python modules\
-    -   `*.ipynb` — Jupyter notebooks\
+    -   `src/` — reusable Python modules
+    -   `*.ipynb` — Jupyter notebooks for tuning, training, evaluation, and plotting
     -   `pyproject.toml`, `uv.lock` — Python environment
 -   `r/` — R project (separate renv environment)
-    -   `R/` — R functions
-    -   `models/` — model-specific scripts\
+    -   `hhh4/`, `tscount/`, `persistence/` — model-specific scripts
+    -   `nowcasting/` — nowcast computation
+    -   `illustrations/` — visualizations
     -   `renv.lock`, `.Rprofile` — R environment
 -   `data/` — input datasets
--   `figures/` — generated plots\
--   `forecasts/` — model forecast outputs\
--   `nowcasts/` — nowcast outputs
+-   `figures/` — generated plots
+-   `forecasts/` — generated forecasts
+-   `nowcasts/` — generated nowcasts
+-   `results/` — generated results
+    -   `scores/` — evaluation metrics
+    -   `tuning/` — hyperparameter tuning results
+
+------------------------------------------------------------------------
 
 ## Environments
+
+Python code lives in `code/`. R code lives in `r/`, with its own environment. Shared inputs and outputs (`data/`, `forecasts/`, `nowcasts/`, `figures/`, `results/`) live at the repo root and are accessible from both Python and R.
 
 ### Python
 
@@ -38,20 +48,13 @@ To ensure reproducibility, please use R 4.5.1. Dependencies are managed with [re
 R -e "install.packages('renv'); renv::restore()"
 ```
 
-Note: The repository includes `.Rprofile` files (at both the root and in `r/`) that\
-automatically activate the correct `renv` environment and anchor the [`here`](https://here.r-lib.org/)\
-package to the repository root. This ensures that paths like `here("data", ...)` always work\
-consistently, whether you open the whole repo or just the R subproject.
+Note: The repository includes `.Rprofile` files (at both the root and in `r/`) that automatically activate the correct `renv` environment and anchor the [`here`](https://here.r-lib.org/) package to the repository root. This ensures that paths like `here("data", ...)` always work consistently, whether you open the whole repo or just the R subproject.
 
-## Conventions
-
-Python code lives in `code/`. R code lives in `r/`, with its own environment.
-
-Shared inputs and outputs (`data/`, `forecasts/`, `nowcasts/`, `figures/`) live at the repo root and are accessible from both Python and R.
+------------------------------------------------------------------------
 
 ## Running the Pipeline
 
-The repository contains a helper script [`run_pipeline.py`](./run_pipeline.py) that orchestrates the execution of all notebooks and R scripts in a defined order. This ensures reproducibility of results and allows running the full pipeline or just selected parts of it.
+The repository contains a helper script [`run_pipeline.py`](./code/run_pipeline.py) that orchestrates the execution of all notebooks and R scripts in a defined order. This ensures reproducibility of results and allows running the full pipeline or just selected parts of it.
 
 ### Pipeline structure
 
@@ -98,7 +101,7 @@ The pipeline runs through the following stages:
 
 ### Usage
 
-From the repository root:
+The pipeline can be executed with different options from the repository root:
 
 -   Run the **entire pipeline**
 
@@ -124,4 +127,4 @@ From the repository root:
     python run_pipeline.py --skip tuning
     ```
 
-⚠️ **Note:** The `tuning` stage can take several days. A warning will be shown if it is included. To avoid it, use `--skip tuning`.
+⚠️ **Note:** The `tuning` stage can take a very long time (several days). If you do not want to run it, use `--skip tuning`
