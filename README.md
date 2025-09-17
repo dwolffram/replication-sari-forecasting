@@ -64,6 +64,14 @@ To run the notebooks with this environment, you must first register it as a Jupy
 uv run -m ipykernel install --user --name=replication-sari
 ```
 
+For interactive use, you can start **JupyterLab** inside the managed environment:
+
+``` bash
+uv run jupyter lab
+```
+
+This provides a browser-based interface, useful if you don't have a preferred IDE installed. After launching, select the kernel *replication-sari* when opening notebooks.
+
 ### R
 
 To ensure reproducibility, please use **R 4.5.1.** Dependencies are managed with [renv](https://rstudio.github.io/renv/). From the `r/` folder, restore the environment with:
