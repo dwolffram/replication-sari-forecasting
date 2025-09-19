@@ -22,5 +22,6 @@ dependencies = [
 [dependency-groups]
 dev = [
     "ipykernel>=6.30.1",
+    "nbstripout>=0.8.1",
     "ruff>=0.12.10",
 ]
