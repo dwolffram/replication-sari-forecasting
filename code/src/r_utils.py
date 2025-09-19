@@ -33,7 +33,7 @@ def detect_rscript() -> str:
         "/opt/homebrew/bin/Rscript",  # Homebrew (Apple Silicon)
         "/usr/local/bin/Rscript",
         "/usr/bin/Rscript",
-        str(Path.home() / "R" / "R-4.5.1" / "bin" / "Rscript"),
+        str(Path.home() / "R" / "4.5.1" / "bin" / "Rscript"),
     ]
 
     for path in candidates:
