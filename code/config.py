@@ -9,11 +9,13 @@ from torch.optim import SGD, Adam, AdamW
 
 ROOT = Path(__file__).resolve().parents[1]
 
-DataMode = Literal["all", "no_covid", "no_covariates"]
 ModelName = Literal["lightgbm", "tsmixer"]
+Mode = Literal["naive", "coupling", "discard", "oracle"]
+DataMode = Literal["all", "no_covid", "no_covariates"]
 
-ALLOWED_DATA_MODES = set(get_args(DataMode))
 ALLOWED_MODELS = set(get_args(ModelName))
+ALLOWED_MODES = set(get_args(Mode))
+ALLOWED_DATA_MODES = set(get_args(DataMode))
 
 # map data_mode → (use_covariates, sample_weight)
 DATA_MODE_CONFIG = {
