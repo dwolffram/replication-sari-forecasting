@@ -17,7 +17,7 @@ load_member_models <- function(models, forecast_date) {
         ".csv"
       )
     )
-    df_temp <- read_csv(filepath) %>%
+    df_temp <- read_csv(filepath, show_col_types = FALSE) %>%
       mutate(model = model) %>%
       filter(type == "quantile")
 
