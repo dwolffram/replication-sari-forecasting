@@ -39,7 +39,7 @@ Install `uv` on your system as follows:
 -   **Linux / macOS**
 
 ``` bash
-curl -LsSf https://astral.sh/uv/install.sh \| sh
+curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
 -   **Windows:**
