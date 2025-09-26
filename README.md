@@ -104,9 +104,9 @@ The pipeline runs through the following stages:
 
 <summary><b>exploration</b>: Exploratory data analysis and visualization.</summary>
 
--   `plot_sari.ipynb`: visualize SARI data\
--   `plot_ari.ipynb`: visualize ARI data\
--   `plot_delays.ipynb`: analyze reporting delays\
+-   `plot_sari.ipynb`: visualize SARI data
+-   `plot_ari.ipynb`: visualize ARI data
+-   `plot_delays.ipynb`: analyze reporting delays
 -   `autocorrelation.ipynb`: investigate correlation structure of time series
 
 </details>
@@ -123,7 +123,7 @@ The pipeline runs through the following stages:
 
 <summary><b>tuning</b>: Hyperparameter tuning for machine learning models (⚠️ may take several days).</summary>
 
--   `tuning_lightgbm.ipynb`\
+-   `tuning_lightgbm.ipynb`
 -   `tuning_tsmixer.ipynb`
 
 </details>
@@ -132,12 +132,12 @@ The pipeline runs through the following stages:
 
 <summary><b>forecasts</b>: Generate forecasts with different model variants.</summary>
 
--   `baseline_historical.ipynb`: historical baseline model\
--   `compute_forecasts.ipynb`: compute ML-based forecasts\
--   `persistence/persistence.R`: persistence baseline\
--   `hhh4/hhh4_default.R`, `hhh4/hhh4_exclude_covid.R`, `hhh4/hhh4_naive.R`,\
-    `hhh4/hhh4_oracle.R`, `hhh4/hhh4_shuffle.R`, `hhh4/hhh4_skip.R`,\
-    `hhh4/hhh4_vincentization.R`: hhh4 model variants\
+-   `baseline_historical.ipynb`: historical baseline model
+-   `compute_forecasts.ipynb`: compute ML-based forecasts
+-   `persistence/persistence.R`: persistence baseline
+-   `hhh4/hhh4_default.R`, `hhh4/hhh4_exclude_covid.R`, `hhh4/hhh4_naive.R`,
+    `hhh4/hhh4_oracle.R`, `hhh4/hhh4_shuffle.R`, `hhh4/hhh4_skip.R`,
+    `hhh4/hhh4_vincentization.R`: hhh4 model variants
 -   `tscount/tscount_extended.R`, `tscount/tscount_simple.R`: tscount models
 
 </details>
@@ -162,10 +162,10 @@ The pipeline runs through the following stages:
 
 <summary><b>evaluation</b>: Final visualization and evaluation of forecasts.</summary>
 
--   `plot_nowcasts.ipynb`\
--   `plot_forecasts.ipynb`\
--   `evaluation.ipynb`\
--   `evaluation_quantiles.ipynb`\
+-   `plot_nowcasts.ipynb`
+-   `plot_forecasts.ipynb`
+-   `evaluation.ipynb`
+-   `evaluation_quantiles.ipynb`
 -   `diebold_mariano.ipynb`
 
 </details>
