@@ -16,7 +16,9 @@ RSCRIPT = detect_rscript()
 # Ensure output dirs exist
 for p in [
     ROOT / "figures",
-    ROOT / "results" / "forecasts",
+    ROOT / "forecasts",
+    ROOT / "nowcasts",
+    ROOT / "results" / "tuning",
     ROOT / "results" / "scores",
 ]:
     p.mkdir(parents=True, exist_ok=True)
@@ -26,7 +28,7 @@ CODE_PY = ROOT / "code"
 CODE_R = ROOT / "r"
 
 # Ordered pipeline
-STAGES = ("exploration", "nowcasts", "tuning", "training", "forecasts", "ensemble", "scores", "evaluation")
+STAGES = ("exploration", "nowcasts", "tuning", "forecasts", "ensemble", "scores", "evaluation")
 
 # Stage → tasks (relative to CODE_PY or CODE_R)
 TASKS = {
@@ -43,12 +45,9 @@ TASKS = {
         "tuning_lightgbm.ipynb",
         "tuning_tsmixer.ipynb",
     ],
-    "training": [
-        "train_models.ipynb",
-    ],
     "forecasts": [
-        "baseline_historical.ipynb",
         "compute_forecasts.ipynb",
+        "baseline_historical.ipynb",
         "persistence/persistence.R",
         "hhh4/hhh4_default.R",
         "hhh4/hhh4_exclude_covid.R",
