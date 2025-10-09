@@ -37,7 +37,7 @@ TASKS = {
         "autocorrelation.ipynb",
     ],
     "nowcasts": [
-        "nowcasting/compute_nowcasts.R",
+        "nowcasting/nowcasting.R",
     ],
     "tuning": [
         "tuning_lightgbm.ipynb",
