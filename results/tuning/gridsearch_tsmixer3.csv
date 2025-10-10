@@ -1,0 +1,3 @@
+use_static_covariates,use_covariates,use_encoders,sample_weight,input_chunk_length,hidden_size,ff_size,num_blocks,dropout,norm_type,batch_size,n_epochs,normalize_before,activation,optimizer,optimizer_kwargs.lr,optimizer_kwargs.weight_decay,WIS_1,WIS_2,WIS_3,WIS,WIS_std,error_flag,error_msg
+False,True,True,linear,8,32,32,4,0.2,TimeBatchNorm2d,32,500,False,ReLU,AdamW,0.0005,0,475.63170840274887,514.8671316638902,490.9186795866305,493.8058398844232,16.147370901772003,False,
+False,True,True,linear,8,32,32,4,0.2,TimeBatchNorm2d,32,500,False,ReLU,AdamW,0.0005,0.001,476.1980115056226,515.6650275926697,488.9659427061641,493.6096606014855,16.443528141740238,False,

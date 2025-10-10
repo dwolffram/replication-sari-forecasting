@@ -51,8 +51,8 @@ MODEL_NAMES = {
     "simple_nowcast": "Nowcast",
     "persistence": "Persistence",
     "historical": "Historical",
-    "tscount-simple": "TSCount-Simple",
-    "tscount-extended": "TSCount-Extended",
+    "tscount-simple": "Agosto1",
+    "tscount-extended": "Agosto2",
 }
 
 MODEL_COLORS = {
@@ -79,8 +79,8 @@ MODEL_COLORS = {
     "hhh4-Discard": "#3C4AAD",
     "hhh4-Naive": "#3C4AAD",
     "hhh4-Vincentization": "#3C4AAD",
-    "TSCount-Simple": "#69e2d1",
-    "TSCount-Extended": "#69e2d1",
+    "Agosto1": "#69e2d1",
+    "Agosto2": "#69e2d1",
     "Nowcast": "#56B4E9",
     "Historical": "#000000",
     "Persistence": "#80471C",
@@ -113,8 +113,8 @@ MODEL_ORDER = [
     "hhh4-Discard",
     "hhh4-Naive",
     "hhh4-Vincentization",
-    "TSCount-Simple",
-    "TSCount-Extended",
+    "Agosto1",
+    "Agosto2",
     "Persistence",
     "Historical",
 ]
