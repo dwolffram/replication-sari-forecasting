@@ -4,6 +4,8 @@
 
 Daniel Wolffram, Johannes Bracher
 
+Preprint: https://www.medrxiv.org/content/10.1101/2025.02.21.25322655v1
+
 ------------------------------------------------------------------------
 
 ## Repository Structure
