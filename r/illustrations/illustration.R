@@ -41,7 +41,7 @@ nowcast3$upper <- nowcast1$upper * c(1, 0.93, 0.93, 0.93, 0.93)
 
 # figure:
 
-pdf(here("figures", "illustration.pdf"), width = 7.5, height = 3.5)
+pdf(here("figures", "Figure1.pdf"), width = 7.5, height = 3.5)
 
 # structure plot area
 par(las = 1, mar = c(4, 5, 1, 1))
@@ -273,7 +273,7 @@ forecast4_upper$upper <- c(1, 1.04, 1.09, 1.16, 1.25) * forecast4_upper$inc7
 
 
 # Figure:
-pdf(here("figures", "illustration2.pdf"), width = 7.5, height = 3.5)
+pdf(here("figures", "Figure4.pdf"), width = 7.5, height = 3.5)
 
 # structure plot area
 par(las = 1, mar = c(4, 5, 1, 1), mfrow = 1:2)
