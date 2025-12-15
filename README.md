@@ -215,8 +215,8 @@ Rscript --version
 ```
 ------------------------------------------------------------------------
 
-## Figures
-The figures can be created with the following scripts/notebooks:
+## Figures & Tables
+The figures and tables can be created with the following scripts/notebooks:
 - Figure 1, 4: `r/illustrations/illustration.R`
 - Figure 2a, 2b, 3a: `code/plot_sari.ipynb`
 - Figure 3b: `code/plot_delays.ipynb`
@@ -227,3 +227,5 @@ The figures can be created with the following scripts/notebooks:
 - Figure S5: `code/plot_nowcasts.ipynb`
 - Figure S10, S11: `code/evaluation_quantiles.ipynb`
 - Figure S12: `code/diebold_mariano.ipynb`
+
+- Table 2: `code/rga.ipynb`
