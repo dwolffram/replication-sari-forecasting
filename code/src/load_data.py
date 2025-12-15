@@ -120,7 +120,7 @@ def load_predictions(
     target=True,
 ):
     path_forecasts = ROOT / "forecasts"
-    files = [f for f in path_forecasts.rglob("*.csv") if "checkpoint" not in f.name]
+    files = [p for p in path_forecasts.rglob("*.csv") if ".ipynb_checkpoints" not in p.parts]
 
     df = pd.concat(
         (pd.read_csv(f).assign(model=f.stem.split("-", 5)[-1]) for f in files),
@@ -151,7 +151,7 @@ def load_nowcasts(
     quantiles=None,
 ):
     path_nowcasts = Path.cwd().parent / "nowcasts" / "simple_nowcast"
-    files = list(path_nowcasts.rglob("*.csv"))
+    files = [p for p in path_nowcasts.rglob("*.csv") if ".ipynb_checkpoints" not in p.parts]
 
     df = pd.concat(
         (pd.read_csv(f).assign(model="Nowcast") for f in files),
