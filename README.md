@@ -2,7 +2,9 @@
 
 # Integrating Nowcasts into an Ensemble of Data-Driven Forecasting Models for SARI Hospitalizations in Germany
 
-Daniel Wolffram, Johannes Bracher
+Authors: Daniel Wolffram, Johannes Bracher
+
+Assembly date: 15 December 2025
 
 Preprint: https://www.medrxiv.org/content/10.1101/2025.02.21.25322655v1
 
@@ -26,6 +28,14 @@ Preprint: https://www.medrxiv.org/content/10.1101/2025.02.21.25322655v1
 -   `results/` — generated results
     -   `scores/` — evaluation metrics
     -   `tuning/` — hyperparameter tuning results
+
+------------------------------------------------------------------------
+
+## Data
+
+All data required to reproduce the results in the paper are provided in this repository.
+
+The data were retrieved from the [RESPINOW-Hub](https://github.com/KITmetricslab/RESPINOW-Hub) and are stored as comma-separated values (CSV) files in the `data/` directory. Pre-processing steps applied to the raw data are fully documented in the corresponding scripts and notebooks in the `code/` and `r/` directories.
 
 ------------------------------------------------------------------------
 
