@@ -43,8 +43,9 @@ The data were retrieved from the [RESPINOW-Hub](https://github.com/KITmetricslab
 
 Python code lives in `code/`. R code lives in `r/`, with its own environment. Shared inputs and outputs (`data/`, `forecasts/`, `nowcasts/`, `figures/`, `results/`) live at the repo root and are accessible from both Python and R.
 
-### Python
-
+<details>
+<summary><b>Python</b></summary>
+    
 The project uses [uv](https://github.com/astral-sh/uv) to manage the Python environment.\
 Install `uv` on your system as follows:
 
@@ -86,9 +87,12 @@ uv run jupyter lab
 
 This provides a browser-based interface, useful if you don't have a preferred IDE installed. After launching, select the kernel *replication-sari* when opening notebooks.
 
-------------------------------------------------------------------------
 
-### R
+</details>
+
+
+<details>
+<summary><b>R</b></summary>
 
 To ensure reproducibility, please use **R 4.5.1.** Dependencies are managed with [renv](https://rstudio.github.io/renv/). From the `r/` folder, restore the environment with:
 
@@ -100,6 +104,8 @@ This will restore all R package dependencies as specified in `renv.lock`. \
 ⚠️ Unlike `uv`, `renv` does not install R itself — you must install R 4.5.1 manually.
 
 Note: The repository includes `.Rprofile` files (at both the root and in `r/`) that automatically activate the correct `renv` environment and anchor the [`here`](https://here.r-lib.org/) package to the repository root. This ensures that paths like `here("data", ...)` always work consistently, whether you open the whole repo or just the R subproject.
+
+</details>
 
 ------------------------------------------------------------------------
 
@@ -190,25 +196,25 @@ The pipeline can be executed with different options from the repository root.\
 -   Run the **entire pipeline**
 
     ``` bash
-    uv run run_pipeline.py
+    uv run code/run_pipeline.py
     ```
 
 -   Run a **single stage**
 
     ``` bash
-    uv run run_pipeline.py --stage evaluation
+    uv run code/run_pipeline.py --stage evaluation
     ```
 
 -   Run a **contiguous range of stages**
 
     ``` bash
-    uv run run_pipeline.py --start forecasts --end scores
+    uv run code/run_pipeline.py --start forecasts --end scores
     ```
 
 -   Run everything **except selected stages**
 
     ``` bash
-    uv run run_pipeline.py --skip tuning
+    uv run code/run_pipeline.py --skip tuning
     ```
 
 ⚠️ **Note:** The `tuning` stage can take a very long time (several days). If you do not want to run it, use `--skip tuning`
