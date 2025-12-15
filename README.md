@@ -39,9 +39,12 @@ The data were retrieved from the [RESPINOW-Hub](https://github.com/KITmetricslab
 
 ------------------------------------------------------------------------
 
-## Environments
+## Computational Environment
 
-Python code lives in `code/`. R code lives in `r/`, with its own environment. Shared inputs and outputs (`data/`, `forecasts/`, `nowcasts/`, `figures/`, `results/`) live at the repo root and are accessible from both Python and R.
+All results were generated on **Linux (Ubuntu 18.04)**. 
+Results obtained on other operating systems (e.g., Windows) may differ slightly due to differences in numerical libraries and system dependencies.
+
+The Python code is located in `code/`, and the R code in `r/`, each with its own environment. Shared inputs and outputs (`data/`, `forecasts/`, `nowcasts/`, `figures/`, `results/`) live at the repo root and are accessible from both Python and R.
 
 <details>
 <summary><b>Python</b></summary>
