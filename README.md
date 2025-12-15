@@ -213,3 +213,17 @@ You can check this with:
 ``` bash
 Rscript --version
 ```
+------------------------------------------------------------------------
+
+## Figures
+The figures can be created with the following scripts/notebooks:
+- Figure 1, 4: `r/illustrations/illustration.R`
+- Figure 2a, 2b, 3a: `code/plot_sari.ipynb`
+- Figure 3b: `code/plot_delays.ipynb`
+- Figure 6, 7, S4: `code/plot_forecasts.ipynb`
+- Figure 8, 9, 10, 11, S6, S7, S8, S9: `code/evaluation.ipynb`
+- Figure S1: `code/plot_ari.ipynb`
+- Figure S2, S3: `code/autocorrelation.ipynb`
+- Figure S5: `code/plot_nowcasts.ipynb`
+- Figure S10, S11: `code/evaluation_quantiles.ipynb`
+- Figure S12: `code/diebold_mariano.ipynb`
