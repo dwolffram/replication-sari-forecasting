@@ -2,7 +2,11 @@
 
 # Integrating Nowcasts into an Ensemble of Data-Driven Forecasting Models for SARI Hospitalizations in Germany
 
-Daniel Wolffram, Johannes Bracher
+Authors: Daniel Wolffram, Johannes Bracher, Melanie Schienle
+
+Preprint: https://www.medrxiv.org/content/10.1101/2025.02.21.25322655v1
+
+Assembly date: 15 December 2025
 
 ------------------------------------------------------------------------
 
@@ -27,12 +31,24 @@ Daniel Wolffram, Johannes Bracher
 
 ------------------------------------------------------------------------
 
-## Environments
+## Data
 
-Python code lives in `code/`. R code lives in `r/`, with its own environment. Shared inputs and outputs (`data/`, `forecasts/`, `nowcasts/`, `figures/`, `results/`) live at the repo root and are accessible from both Python and R.
+All data required to reproduce the results in the paper are provided in this repository.
 
-### Python
+The data were retrieved from the [RESPINOW-Hub](https://github.com/KITmetricslab/RESPINOW-Hub) and are stored as comma-separated values (CSV) files in the `data/` directory. Pre-processing steps applied to the raw data are fully documented in the corresponding scripts and notebooks in the `code/` and `r/` directories.
 
+------------------------------------------------------------------------
+
+## Computational Environment
+
+All results were generated on **Linux (Ubuntu 18.04)**. 
+Results obtained on other operating systems (e.g., Windows) may differ slightly due to differences in numerical libraries and system dependencies.
+
+The Python code is located in `code/`, and the R code in `r/`, each with its own environment. Shared inputs and outputs (`data/`, `forecasts/`, `nowcasts/`, `figures/`, `results/`) live at the repo root and are accessible from both Python and R.
+
+<details>
+<summary><b>Python</b></summary>
+    
 The project uses [uv](https://github.com/astral-sh/uv) to manage the Python environment.\
 Install `uv` on your system as follows:
 
@@ -74,9 +90,12 @@ uv run jupyter lab
 
 This provides a browser-based interface, useful if you don't have a preferred IDE installed. After launching, select the kernel *replication-sari* when opening notebooks.
 
-------------------------------------------------------------------------
 
-### R
+</details>
+
+
+<details>
+<summary><b>R</b></summary>
 
 To ensure reproducibility, please use **R 4.5.1.** Dependencies are managed with [renv](https://rstudio.github.io/renv/). From the `r/` folder, restore the environment with:
 
@@ -88,6 +107,8 @@ This will restore all R package dependencies as specified in `renv.lock`. \
 ⚠️ Unlike `uv`, `renv` does not install R itself — you must install R 4.5.1 manually.
 
 Note: The repository includes `.Rprofile` files (at both the root and in `r/`) that automatically activate the correct `renv` environment and anchor the [`here`](https://here.r-lib.org/) package to the repository root. This ensures that paths like `here("data", ...)` always work consistently, whether you open the whole repo or just the R subproject.
+
+</details>
 
 ------------------------------------------------------------------------
 
@@ -178,25 +199,25 @@ The pipeline can be executed with different options from the repository root.\
 -   Run the **entire pipeline**
 
     ``` bash
-    uv run run_pipeline.py
+    uv run code/run_pipeline.py
     ```
 
 -   Run a **single stage**
 
     ``` bash
-    uv run run_pipeline.py --stage evaluation
+    uv run code/run_pipeline.py --stage evaluation
     ```
 
 -   Run a **contiguous range of stages**
 
     ``` bash
-    uv run run_pipeline.py --start forecasts --end scores
+    uv run code/run_pipeline.py --start forecasts --end scores
     ```
 
 -   Run everything **except selected stages**
 
     ``` bash
-    uv run run_pipeline.py --skip tuning
+    uv run code/run_pipeline.py --skip tuning
     ```
 
 ⚠️ **Note:** The `tuning` stage can take a very long time (several days). If you do not want to run it, use `--skip tuning`
@@ -211,3 +232,19 @@ You can check this with:
 ``` bash
 Rscript --version
 ```
+------------------------------------------------------------------------
+
+## Figures & Tables
+The figures and tables can be created with the following scripts/notebooks:
+- Figure 1, 4: `r/illustrations/illustration.R`
+- Figure 2a, 2b, 3a: `code/plot_sari.ipynb`
+- Figure 3b: `code/plot_delays.ipynb`
+- Figure 6, 7, S4: `code/plot_forecasts.ipynb`
+- Figure 8, 9, 10, 11, S6, S7, S8, S9: `code/evaluation.ipynb`
+- Figure S1: `code/plot_ari.ipynb`
+- Figure S2, S3: `code/autocorrelation.ipynb`
+- Figure S5: `code/plot_nowcasts.ipynb`
+- Figure S10, S11: `code/evaluation_quantiles.ipynb`
+- Figure S12: `code/diebold_mariano.ipynb`
+
+- Table 2: `code/rga.ipynb`
