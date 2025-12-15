@@ -2,11 +2,11 @@
 
 # Integrating Nowcasts into an Ensemble of Data-Driven Forecasting Models for SARI Hospitalizations in Germany
 
-Authors: Daniel Wolffram, Johannes Bracher
-
-Assembly date: 15 December 2025
+Authors: Daniel Wolffram, Johannes Bracher, Melanie Schienle
 
 Preprint: https://www.medrxiv.org/content/10.1101/2025.02.21.25322655v1
+
+Assembly date: 15 December 2025
 
 ------------------------------------------------------------------------
 
