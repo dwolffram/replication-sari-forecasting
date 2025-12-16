@@ -13,5 +13,9 @@
 message("Activating renv project at ./r")
 renv::load("r")
 
+if (!requireNamespace("here", quietly = TRUE)) {
+  try(renv::restore(prompt = FALSE), silent = TRUE)
+}
+
 library(here)
 here::i_am(".Rprofile")

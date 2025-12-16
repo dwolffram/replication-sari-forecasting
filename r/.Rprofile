@@ -11,5 +11,9 @@
 
 source("renv/activate.R")
 
+if (!requireNamespace("here", quietly = TRUE)) {
+  try(renv::restore(prompt = FALSE), silent = TRUE)
+}
+
 library(here)
 here::i_am("r/.Rprofile")
